@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  COURIER
+  RECIPIENT
+}
+
+enum OrderStatus {
+  PENDING
+  AWAITING
+  PICKED_UP
+  DELIVERED
+  RETURNED
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String
+  cpf       String
+  password  String
+  role      UserRole
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+
+  orders     Order[] @relation("recipient")
+  deliveries Order[] @relation("courier")
+
+  @@map("users")
+}
+
+model Order {
+  id          String       @id @default(uuid())
+  title       String
+  description String
+  slug        String       @unique
+  status      OrderStatus
+  latitude    Decimal
+  longitude   Decimal
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime?    @updatedAt @map("updated_at")
+  courierId   String?      @map("courier_id")
+  recipientId String       @map("recipient_id")
+  attachments Attachment[]
+
+  recipient User  @relation("recipient", fields: [recipientId], references: [id])
+  courier   User? @relation("courier", fields: [courierId], references: [id])
+
+  @@map("orders")
+}
+
+model Attachment {
+  id        String    @id @default(uuid())
+  title     String
+  url       String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  orderId   String    @map("order_id")
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@map("attachments")
+}
