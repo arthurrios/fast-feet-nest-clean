@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
   UsePipes,
 } from '@nestjs/common'
-import { PrismaService } from '@/infra/prisma/prisma.service'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { compare } from 'bcrypt'
 import { z } from 'zod'
 import { JwtService } from '@nestjs/jwt'
