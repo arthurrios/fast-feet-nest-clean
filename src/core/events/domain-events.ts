@@ -7,7 +7,11 @@ type DomainEventCallback<T extends DomainEvent> = (
 ) => void | Promise<void>
 
 export class DomainEvents {
-  private static handlersMap: Record<string, DomainEventCallback<any>[]> = {}
+  private static handlersMap: Record<
+    string,
+    DomainEventCallback<DomainEvent>[]
+  > = {}
+
   private static markedAggregates: AggregateRoot<unknown>[] = []
 
   public static shouldRun = true
@@ -69,7 +73,9 @@ export class DomainEvents {
       this.handlersMap[eventClassName] = []
     }
 
-    this.handlersMap[eventClassName].push(callback)
+    this.handlersMap[eventClassName].push(
+      callback as DomainEventCallback<DomainEvent>,
+    )
   }
 
   public static clearHandlers() {

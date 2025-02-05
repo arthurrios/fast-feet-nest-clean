@@ -7,11 +7,11 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { OrderStatus } from '@prisma/client'
-import { CurrentUser } from 'src/infra/auth/current-user-decorator'
-import { JwtAuthGuard } from 'src/infra/auth/jwt-auth.guard'
-import { UserPayload } from 'src/infra/auth/jwt.strategy'
-import { ZodValidationPipe } from 'src/infra/pipes/zod-validation-pipe'
-import { PrismaService } from 'src/infra/prisma/prisma.service'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { ZodValidationPipe } from '@/infra/pipes/zod-validation-pipe'
+import { PrismaService } from '@/infra/prisma/prisma.service'
 import { z } from 'zod'
 
 const createOrderBodySchema = z.object({

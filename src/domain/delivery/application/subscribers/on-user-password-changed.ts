@@ -20,7 +20,7 @@ export class OnUserPasswordChanged implements EventHandler {
 
   private async changeDeliveryUserPassword({ user }: UserPasswordChangedEvent) {
     for (const repository of this.repositories) {
-      const entity = await repository.findByCpf(user.cpf)
+      const entity = await repository.findByCpf(user.cpf.toString())
       if (entity) {
         entity.password = user.password
         await repository.save(entity)
