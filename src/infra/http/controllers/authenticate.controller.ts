@@ -8,8 +8,8 @@ import {
 import { PrismaService } from '@/infra/prisma/prisma.service'
 import { compare } from 'bcrypt'
 import { z } from 'zod'
-import { ZodValidationPipe } from '@/infra/pipes/zod-validation-pipe'
 import { JwtService } from '@nestjs/jwt'
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 
 const authenticateBodySchema = z.object({
   cpf: z.string().length(11),
