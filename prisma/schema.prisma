@@ -33,12 +33,12 @@ model User {
   email     String    @unique
   cpf       String    @unique
   password  String
-  role      UserRole
+  role      UserRole  @default(COURIER)
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   orders     Order[] @relation("recipient")
-  deliveries Order[] @relation("courier")
+  assignedTo Order[] @relation("courier")
 
   @@map("users")
 }
@@ -69,9 +69,9 @@ model Attachment {
   url       String
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
-  orderId   String    @map("order_id")
+  orderId   String?   @map("order_id")
 
-  order Order @relation(fields: [orderId], references: [id])
+  order Order? @relation(fields: [orderId], references: [id])
 
   @@map("attachments")
 }

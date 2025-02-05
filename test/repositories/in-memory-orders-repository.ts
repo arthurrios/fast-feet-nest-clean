@@ -25,6 +25,7 @@ export class InMemoryOrdersRepository implements OrdersRepository {
   ): Promise<Order[]> {
     const orders = this.items
       .filter((item) => item.courierId?.toString() === courierId)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice((page - 1) * 20, page * 20)
 
     return orders
@@ -49,11 +50,14 @@ export class InMemoryOrdersRepository implements OrdersRepository {
 
         return distance < 10
       })
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
       .slice((page - 1) * 20, page * 20)
   }
 
   async findMany({ page }: PaginationParams): Promise<Order[]> {
-    const orders = this.items.slice((page - 1) * 20, page * 20)
+    const orders = this.items
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20)
 
     return orders
   }

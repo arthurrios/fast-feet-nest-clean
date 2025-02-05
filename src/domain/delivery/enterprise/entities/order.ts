@@ -89,7 +89,10 @@ export class Order extends AggregateRoot<OrderProps> {
   }
 
   static create(
-    props: Optional<OrderProps, 'createdAt' | 'slug' | 'status' | 'courierId'>,
+    props: Optional<
+      OrderProps,
+      'createdAt' | 'slug' | 'status' | 'courierId' | 'attachments'
+    >,
     id?: UniqueEntityID,
   ) {
     const order = new Order(
@@ -97,6 +100,7 @@ export class Order extends AggregateRoot<OrderProps> {
         ...props,
         slug: props.slug ?? Slug.createFromText(props.title),
         status: props.status ?? OrderStatus.PENDING,
+        attachments: props.attachments ?? new OrderAttachmentList(),
         createdAt: props.createdAt ?? new Date(),
       },
       id,
