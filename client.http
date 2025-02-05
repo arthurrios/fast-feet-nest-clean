@@ -1,4 +1,5 @@
 @baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.access_token}}
 
 # @name register_user
 POST {{baseUrl}}/users
@@ -22,3 +23,10 @@ Content-Type: application/json
   "cpf": "05011030156",
   "password": "123456"
 }
+
+###
+
+# @name create_order
+POST {{baseUrl}}/orders
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
