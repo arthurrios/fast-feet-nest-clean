@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.access_token}}
+@recipientId = 9f6bfc71-0f4d-4a5d-af97-c027b7795fd4
 
 # @name register_user
 POST {{baseUrl}}/users
@@ -27,6 +28,13 @@ Content-Type: application/json
 ###
 
 # @name create_order
-POST {{baseUrl}}/orders
+POST {{baseUrl}}/orders/{{recipientId}}
 Content-Type: application/json
 Authorization: Bearer {{authToken}}
+
+{
+  "title": "New Order",
+  "description": "A new order",
+  "latitude": 0.0,
+  "longitude": 0.0
+}

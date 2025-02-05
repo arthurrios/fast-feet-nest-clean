@@ -48,7 +48,7 @@ model Order {
   title       String
   description String
   slug        String       @unique
-  status      OrderStatus
+  status      OrderStatus  @default(PENDING)
   latitude    Decimal
   longitude   Decimal
   createdAt   DateTime     @default(now()) @map("created_at")
