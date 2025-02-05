@@ -1,0 +1,24 @@
+@baseUrl = http://localhost:3333
+
+# @name register_user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Arthur Rios",
+  "email": "arthur@acme.com",
+  "cpf": "05011030156",
+  "password": "123456",
+  "role": "ADMIN"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "cpf": "05011030156",
+  "password": "123456"
+}
