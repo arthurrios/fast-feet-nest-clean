@@ -9,6 +9,7 @@ import { AuthorizationService } from '@/core/services/authorization-service'
 import { Coordinate } from 'test/utils/get-distance-between-coordinates'
 import { Role } from '@/domain/user/@types/role'
 import { OrderAttachmentList } from '../../enterprise/entities/order-attachment-list'
+import { Injectable } from '@nestjs/common'
 
 interface CreateOrderUseCaseRequest {
   requesterId: string
@@ -24,6 +25,7 @@ type CreateOrderUseCaseResponse = Either<
   { order: Order }
 >
 
+@Injectable()
 export class CreateOrderUseCase {
   constructor(
     private authorizationService: AuthorizationService,

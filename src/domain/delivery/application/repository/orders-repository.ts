@@ -6,18 +6,20 @@ export interface FindManyNearbyParams {
   longitude: number
 }
 
-export interface OrdersRepository {
-  findById(id: string): Promise<Order | null>
-  findManyByCourierId(
+export abstract class OrdersRepository {
+  abstract findById(id: string): Promise<Order | null>
+  abstract findManyByCourierId(
     courierId: string,
     params: PaginationParams,
   ): Promise<Order[]>
-  findManyNearbyCourier(
+
+  abstract findManyNearbyCourier(
     courierCoordinate: FindManyNearbyParams,
     params: PaginationParams,
   ): Promise<Order[]>
-  findMany(params: PaginationParams): Promise<Order[]>
-  create(order: Order): Promise<void>
-  save(order: Order): Promise<void>
-  delete(order: Order): Promise<void>
+
+  abstract findMany(params: PaginationParams): Promise<Order[]>
+  abstract create(order: Order): Promise<void>
+  abstract save(order: Order): Promise<void>
+  abstract delete(order: Order): Promise<void>
 }

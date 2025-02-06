@@ -3,7 +3,9 @@ import { Either, left, right } from '../either'
 import { UnauthorizedAdminOnlyError } from '../errors/errors/unauthorized-admin-only-error'
 import { UniqueEntityID } from '../entities/unique-entity-id'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class AuthorizationService {
   constructor(private usersRepository: UsersRepository) {}
 

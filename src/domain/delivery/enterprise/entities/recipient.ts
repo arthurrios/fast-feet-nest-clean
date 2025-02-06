@@ -2,6 +2,8 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Entity } from '@/core/entities/entity'
 import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 import { UserLinkedEntity } from '../../../../core/shared/entities/user-linked-entity'
+import { User } from '@/domain/user/enterprise/entities/user'
+import { Role } from '@/domain/user/@types/role'
 
 export interface RecipientProps {
   name: string
@@ -69,5 +71,23 @@ export class Recipient
     )
 
     return recipient
+  }
+
+  static fromUser(user: User): Recipient {
+    if (user.role !== Role.RECIPIENT) {
+      throw new Error('User is not a recipient')
+    }
+
+    return new Recipient(
+      {
+        name: user.name,
+        cpf: user.cpf,
+        email: user.email,
+        password: user.password,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+      user.id,
+    )
   }
 }

@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.access_token}}
-@recipientId = 9f6bfc71-0f4d-4a5d-af97-c027b7795fd4
+@recipientId = e106842f-c863-4fae-bd6e-8816d8f4baff
 
 # @name register_user
 POST {{baseUrl}}/users
@@ -8,10 +8,10 @@ Content-Type: application/json
 
 {
   "name": "Arthur Rios",
-  "email": "arthur@acme.com",
-  "cpf": "05011030156",
+  "email": "arthur2@acme.com",
+  "cpf": "05011030103",
   "password": "123456",
-  "role": "ADMIN"
+  "role": "COURIER"
 }
 
 ###

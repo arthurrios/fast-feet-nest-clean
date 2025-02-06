@@ -3,6 +3,8 @@ import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { CourierRegisteredEvent } from '../events/courier-registered-event'
 import { UserLinkedEntity } from '../../../../core/shared/entities/user-linked-entity'
+import { User } from '@/domain/user/enterprise/entities/user'
+import { Role } from '@/domain/user/@types/role'
 
 export interface CourierProps {
   name: string
@@ -71,6 +73,27 @@ export class Courier
 
     courier.addDomainEvent(new CourierRegisteredEvent(courier))
 
+    return courier
+  }
+
+  static fromUser(user: User): Courier {
+    if (user.role !== Role.COURIER) {
+      throw new Error('User is not a courier')
+    }
+
+    const courier = new Courier(
+      {
+        name: user.name,
+        cpf: user.cpf,
+        email: user.email,
+        password: user.password,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
+      user.id,
+    )
+
+    courier.addDomainEvent(new CourierRegisteredEvent(courier))
     return courier
   }
 }
