@@ -1,9 +1,7 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Order } from '@/domain/delivery/enterprise/entities/order'
-import { OrderAttachmentList } from '@/domain/delivery/enterprise/entities/order-attachment-list'
 import { Slug } from '@/domain/delivery/enterprise/entities/value-objects/slug'
 import { Prisma, Order as PrismaOrder } from '@prisma/client'
-import { PrismaAttachmentMapper } from './prisma-attachment-mapper'
 
 export class PrismaOrderMapper {
   static toDomain(raw: PrismaOrder) {

@@ -9,8 +9,10 @@ import { CreateOrderUseCase } from '@/domain/delivery/application/use-cases/crea
 const createOrderBodySchema = z.object({
   title: z.string(),
   description: z.string(),
-  latitude: z.number(),
-  longitude: z.number(),
+  coordinate: z.object({
+    latitude: z.number(),
+    longitude: z.number(),
+  }),
   courierId: z.string().optional(),
 })
 
@@ -29,17 +31,14 @@ export class CreateOrderController {
     @CurrentUser() user: UserPayload,
     @Param('recipientId') recipientId: string,
   ) {
-    const { title, description, latitude, longitude, courierId } = body
+    const { title, description, coordinate, courierId } = body
     const userId = user.sub
 
     await this.createOrder.execute({
       requesterId: userId,
       title,
       description,
-      coordinate: {
-        latitude,
-        longitude,
-      },
+      coordinate,
       courierId,
       recipientId,
     })
