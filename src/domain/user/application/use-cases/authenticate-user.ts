@@ -5,6 +5,7 @@ import { CPF } from '../../enterprise/entities/value-objects/cpf'
 import { Encrypter } from '../cryptography/encrypter'
 import { WrongCredentialsError } from './errors/wrong-credentials-error'
 import { Role } from '../../@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface AuthenticateUseCaseRequest {
   cpf: string
@@ -13,9 +14,10 @@ interface AuthenticateUseCaseRequest {
 
 type AuthenticateUseCaseResponse = Either<
   WrongCredentialsError,
-  { accessToken: string }
+  { access_token: string }
 >
 
+@Injectable()
 export class AuthenticateUseCase {
   constructor(
     private usersRepository: UsersRepository,
@@ -46,6 +48,6 @@ export class AuthenticateUseCase {
       sub: user.id.toString(),
     })
 
-    return right({ accessToken })
+    return right({ access_token: accessToken })
   }
 }
