@@ -1,6 +1,6 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.access_token}}
-@recipientId = e106842f-c863-4fae-bd6e-8816d8f4baff
+@recipientId = 27569fa4-fd21-49ff-a00f-22ce4da9e0a6
 
 # @name register_user
 POST {{baseUrl}}/users
@@ -8,8 +8,8 @@ Content-Type: application/json
 
 {
   "name": "Arthur Rios",
-  "email": "arthur2@acme.com",
-  "cpf": "05011030103",
+  "email": "arthur3@acme.com",
+  "cpf": "05011030156",
   "password": "123456",
   "role": "COURIER"
 }
@@ -35,6 +35,8 @@ Authorization: Bearer {{authToken}}
 {
   "title": "New Order",
   "description": "A new order",
-  "latitude": 0.0,
-  "longitude": 0.0
+  "coordinate": {
+    "latitude": 0.0,
+    "longitude": 0.0
+  }
 }

@@ -6,6 +6,7 @@ import { HashGenerator } from '@/domain/user/application/cryptography/hash-gener
 import { Role } from '../../@types/role'
 import { CPF } from '../../enterprise/entities/value-objects/cpf'
 import { Injectable } from '@nestjs/common'
+import { InvalidCpfError } from '../../enterprise/entities/errors/invalid-cpf'
 
 interface CreateUserUseCaseRequest {
   name: string
@@ -15,7 +16,10 @@ interface CreateUserUseCaseRequest {
   role: Role
 }
 
-type CreateUserUseCaseResponse = Either<UserAlreadyExistsError, { user: User }>
+type CreateUserUseCaseResponse = Either<
+  UserAlreadyExistsError | InvalidCpfError,
+  { user: User }
+>
 
 @Injectable()
 export class CreateUserUseCase {
@@ -31,6 +35,8 @@ export class CreateUserUseCase {
     password,
     role,
   }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
+    let cpfValue: CPF
+
     const userWithSameCPF = await this.usersRepository.findByCpf(cpf)
 
     if (userWithSameCPF) {
@@ -45,8 +51,14 @@ export class CreateUserUseCase {
 
     const hashedPassword = await this.hashGenerator.hash(password)
 
+    try {
+      cpfValue = CPF.create(cpf)
+    } catch (error) {
+      return left(new InvalidCpfError(cpf))
+    }
+
     const user = User.create({
-      cpf: CPF.create(cpf),
+      cpf: cpfValue,
       email,
       name,
       password: hashedPassword,

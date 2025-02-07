@@ -6,10 +6,7 @@ import {
   UnauthorizedException,
   UsePipes,
 } from '@nestjs/common'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { compare } from 'bcrypt'
 import { z } from 'zod'
-import { JwtService } from '@nestjs/jwt'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { AuthenticateUseCase } from '@/domain/user/application/use-cases/authenticate-user'
 import { WrongCredentialsError } from '@/domain/user/application/use-cases/errors/wrong-credentials-error'
@@ -42,7 +39,7 @@ export class AuthenticateController {
         case WrongCredentialsError:
           throw new UnauthorizedException(error.message)
         default:
-          throw new UnauthorizedException(error.message)
+          throw new BadRequestException(error.message)
       }
     }
 

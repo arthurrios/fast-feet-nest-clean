@@ -7,8 +7,6 @@ import {
   Post,
   UsePipes,
 } from '@nestjs/common'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { hash } from 'bcrypt'
 import { z } from 'zod'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { CreateUserUseCase } from '@/domain/user/application/use-cases/create-user'
