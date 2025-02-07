@@ -97,8 +97,6 @@ describe('Register Recipient', () => {
       },
     })
 
-    console.log(result.value)
-
     expect(result.isLeft()).toBe(true)
   })
 })

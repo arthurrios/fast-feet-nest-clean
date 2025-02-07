@@ -8,6 +8,8 @@ import { CouriersRepository } from '@/domain/delivery/application/repository/cou
 import { PrismaCouriersRepository } from './prisma/repositories/prisma-couriers-repository'
 import { RecipientsRepository } from '@/domain/delivery/application/repository/recipient-repository'
 import { PrismaRecipientsRepository } from './prisma/repositories/prisma-recipients-repository'
+import { UsersRepository } from '@/domain/user/application/repositories/users-repository'
+import { PrismaUsersRepository } from './prisma/repositories/prisma-users-repository'
 
 @Module({
   providers: [
@@ -24,6 +26,10 @@ import { PrismaRecipientsRepository } from './prisma/repositories/prisma-recipie
       provide: RecipientsRepository,
       useClass: PrismaRecipientsRepository,
     },
+    {
+      provide: UsersRepository,
+      useClass: PrismaUsersRepository,
+    },
     PrismaOrderAttachmentsRepository,
     PrismaAttachmentsRepository,
   ],
@@ -32,6 +38,7 @@ import { PrismaRecipientsRepository } from './prisma/repositories/prisma-recipie
     OrdersRepository,
     CouriersRepository,
     RecipientsRepository,
+    UsersRepository,
     PrismaOrderAttachmentsRepository,
     PrismaAttachmentsRepository,
   ],

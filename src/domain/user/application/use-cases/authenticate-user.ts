@@ -27,7 +27,7 @@ export class AuthenticateUseCase {
     cpf,
     password,
   }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
-    const user = await this.usersRepository.findByCPF(CPF.create(cpf))
+    const user = await this.usersRepository.findByCpf(cpf)
 
     if (!user) {
       return left(new WrongCredentialsError())
@@ -45,10 +45,6 @@ export class AuthenticateUseCase {
     const accessToken = await this.encrypter.encrypt({
       sub: user.id.toString(),
     })
-
-    if (user.role === Role.COURIER) {
-      // dispatch domain event for listing close orders
-    }
 
     return right({ accessToken })
   }

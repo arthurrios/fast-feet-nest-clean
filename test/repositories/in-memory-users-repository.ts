@@ -1,7 +1,6 @@
 import { DomainEvents } from '@/core/events/domain-events'
 import { UsersRepository } from '@/domain/user/application/repositories/users-repository'
 import { User } from '@/domain/user/enterprise/entities/user'
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 
 export class InMemoryUsersRepository implements UsersRepository {
   public items: User[] = []
@@ -15,8 +14,18 @@ export class InMemoryUsersRepository implements UsersRepository {
     return user
   }
 
-  async findByCPF(cpf: CPF): Promise<User | null> {
-    const user = this.items.find((item) => item.cpf.getRaw() === cpf.getRaw())
+  async findByCpf(cpf: string): Promise<User | null> {
+    const user = this.items.find((item) => item.cpf.getRaw() === cpf)
+
+    if (!user) {
+      return null
+    }
+
+    return user
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const user = this.items.find((item) => item.email === email)
 
     if (!user) {
       return null

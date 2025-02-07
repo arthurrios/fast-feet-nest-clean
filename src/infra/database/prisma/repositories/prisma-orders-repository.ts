@@ -79,8 +79,6 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async create(order: Order): Promise<void> {
     const data = PrismaOrderMapper.toPrisma(order)
 
-    console.log('order created', data)
-
     await this.prisma.order.create({
       data,
     })

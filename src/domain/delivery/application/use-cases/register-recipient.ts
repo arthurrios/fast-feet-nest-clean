@@ -51,8 +51,6 @@ export class RegisterRecipientUseCase {
     )
 
     if (courierWithSameCPF) {
-      console.log('RecipientAlreadyExistsError')
-
       return left(new RecipientAlreadyExistsError(data.cpf.toString()))
     }
 

@@ -5,6 +5,7 @@ import { UserAlreadyExistsError } from './errors/user-already-exists-error'
 import { HashGenerator } from '@/domain/user/application/cryptography/hash-generator'
 import { Role } from '../../@types/role'
 import { CPF } from '../../enterprise/entities/value-objects/cpf'
+import { Injectable } from '@nestjs/common'
 
 interface CreateUserUseCaseRequest {
   name: string
@@ -16,6 +17,7 @@ interface CreateUserUseCaseRequest {
 
 type CreateUserUseCaseResponse = Either<UserAlreadyExistsError, { user: User }>
 
+@Injectable()
 export class CreateUserUseCase {
   constructor(
     private usersRepository: UsersRepository,
@@ -29,12 +31,16 @@ export class CreateUserUseCase {
     password,
     role,
   }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
-    const userWithSameCPF = await this.usersRepository.findByCPF(
-      CPF.create(cpf),
-    )
+    const userWithSameCPF = await this.usersRepository.findByCpf(cpf)
 
     if (userWithSameCPF) {
       return left(new UserAlreadyExistsError(cpf.toString()))
+    }
+
+    const userWithSameEmail = await this.usersRepository.findByEmail(email)
+
+    if (userWithSameEmail) {
+      return left(new UserAlreadyExistsError(email))
     }
 
     const hashedPassword = await this.hashGenerator.hash(password)

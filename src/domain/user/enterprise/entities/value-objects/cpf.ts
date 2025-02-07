@@ -71,15 +71,18 @@ export class CPF {
     return this.getFormatted()
   }
 
-  equals(cpf: CPF) {
+  /**
+   * Allows JSON serialization to return the raw CPF value.
+   */
+  toJSON(): string {
+    return this.getRaw()
+  }
+
+  equals(cpf: CPF): boolean {
     if (cpf === this) {
       return true
     }
 
-    if (cpf.getRaw() === this.getRaw()) {
-      return true
-    }
-
-    return false
+    return cpf.getRaw() === this.getRaw()
   }
 }

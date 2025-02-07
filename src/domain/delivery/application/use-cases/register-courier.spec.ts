@@ -97,8 +97,6 @@ describe('Register Courier', () => {
       },
     })
 
-    console.log(result.value)
-
     expect(result.isLeft()).toBe(true)
   })
 })

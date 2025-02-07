@@ -23,12 +23,40 @@ export class PrismaUsersRepository implements UsersRepository {
     return PrismaUserMapper.toDomain(user)
   }
 
-  findByCPF(cpf: CPF): Promise<User | null> {
-    throw new Error('Method not implemented.')
+  async findByCpf(cpf: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        cpf,
+      },
+    })
+
+    if (!user) {
+      return null
+    }
+
+    return PrismaUserMapper.toDomain(user)
   }
 
-  create(user: User): Promise<void> {
-    throw new Error('Method not implemented.')
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+    })
+
+    if (!user) {
+      return null
+    }
+
+    return PrismaUserMapper.toDomain(user)
+  }
+
+  async create(user: User): Promise<void> {
+    const data = PrismaUserMapper.toPrisma(user)
+
+    await this.prisma.user.create({
+      data,
+    })
   }
 
   save(user: User): Promise<void> {

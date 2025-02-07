@@ -29,8 +29,8 @@ export class OnOrderCreated implements EventHandler {
     if (!recipient) return
 
     await this.userDeliveriesRepository.createOrUpdate({
-      cpf: recipient.cpf,
-      deliveryId: order.id,
+      cpf: recipient.cpf.getRaw(),
+      deliveryId: order.id.toValue(),
       role: Role.RECIPIENT,
     })
   }

@@ -32,9 +32,12 @@ export class FetchUserDeliveriesUseCase {
       return left(new ResourceNotFoundError('user'))
     }
 
-    const deliveries = await this.userDeliveriesRepository.findByCpf(user.cpf, {
-      page,
-    })
+    const deliveries = await this.userDeliveriesRepository.findByCpf(
+      user.cpf.getRaw(),
+      {
+        page,
+      },
+    )
 
     return right({ deliveries })
   }

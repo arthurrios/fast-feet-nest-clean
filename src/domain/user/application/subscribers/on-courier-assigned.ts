@@ -28,8 +28,8 @@ export class OnCourierAssigned implements EventHandler {
     if (!courier) return
 
     await this.userDeliveriesRepository.createOrUpdate({
-      cpf: courier.cpf,
-      deliveryId: orderId,
+      cpf: courier.cpf.getRaw(),
+      deliveryId: orderId.toValue(),
       role: Role.COURIER,
     })
   }
