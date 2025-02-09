@@ -12,10 +12,7 @@ interface AuthenticateUseCaseRequest {
   password: string
 }
 
-type AuthenticateUseCaseResponse = Either<
-  WrongCredentialsError,
-  { access_token: string }
->
+type AuthenticateUseCaseResponse = Either<Error, { accessToken: string }>
 
 @Injectable()
 export class AuthenticateUseCase {
@@ -48,6 +45,6 @@ export class AuthenticateUseCase {
       sub: user.id.toString(),
     })
 
-    return right({ access_token: accessToken })
+    return right({ accessToken })
   }
 }

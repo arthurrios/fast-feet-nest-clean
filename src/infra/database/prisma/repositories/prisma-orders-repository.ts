@@ -39,18 +39,18 @@ export class PrismaOrdersRepository implements OrdersRepository {
     return orders.map(PrismaOrderMapper.toDomain)
   }
 
-  async findManyNearbyCourier(
-    courierCoordinate: FindManyNearbyParams,
+  async findManyNearby(
+    coordinate: FindManyNearbyParams,
     { page }: PaginationParams,
   ): Promise<Order[]> {
-    const { latitude, longitude } = courierCoordinate
+    const { latitude, longitude } = coordinate
     const distanceLimit = 10
     const limit = 20
     const offset = (page - 1) * limit
 
     const orders = await this.prisma.$queryRaw<RawOrder[]>`
     SELECT *
-    FROM "Order"
+    FROM "orders"
     WHERE (
       6371 * acos(
         cos(radians(${latitude})) * cos(radians("latitude")) *
@@ -58,7 +58,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
         sin(radians(${latitude})) * sin(radians("latitude"))
       )
     ) < ${distanceLimit}
-    ORDER BY "createdAt" DESC
+    ORDER BY "created_at" DESC
     LIMIT ${limit}
     OFFSET ${offset}
   `

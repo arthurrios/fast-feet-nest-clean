@@ -30,13 +30,13 @@ describe('Fetch User Deliveries', () => {
 
     const deliveries = [
       {
-        cpf: user.cpf,
-        deliveryId: new UniqueEntityID('1'),
+        cpf: user.cpf.getRaw(),
+        deliveryId: '1',
         role: Role.RECIPIENT,
       },
       {
-        cpf: user.cpf,
-        deliveryId: new UniqueEntityID('2'),
+        cpf: user.cpf.getRaw(),
+        deliveryId: '2',
         role: Role.COURIER,
       },
     ]
@@ -81,8 +81,8 @@ describe('Fetch User Deliveries', () => {
     await inMemoryUsersRepository.create(user)
 
     const deliveries = Array.from({ length: 22 }).map((_, index) => ({
-      cpf: user.cpf,
-      deliveryId: new UniqueEntityID(`delivery${index + 1}`),
+      cpf: user.cpf.getRaw(),
+      deliveryId: `delivery${index + 1}`,
       role: index % 2 === 0 ? Role.RECIPIENT : Role.COURIER,
     }))
 
@@ -100,13 +100,13 @@ describe('Fetch User Deliveries', () => {
 
     inMemoryUserDeliveriesRepository.items.push(
       {
-        cpf: user1.cpf,
-        deliveryId: new UniqueEntityID('1'),
+        cpf: user1.cpf.getRaw(),
+        deliveryId: '1',
         role: Role.RECIPIENT,
       },
       {
-        cpf: user2.cpf,
-        deliveryId: new UniqueEntityID('2'),
+        cpf: user2.cpf.getRaw(),
+        deliveryId: '2',
         role: Role.COURIER,
       },
     )

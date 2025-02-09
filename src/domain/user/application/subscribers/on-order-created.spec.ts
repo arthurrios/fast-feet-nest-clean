@@ -45,14 +45,14 @@ describe('On Order Created', () => {
       expect(
         inMemoryUserDeliveriesRepositories.createOrUpdate,
       ).toHaveBeenCalledWith({
-        cpf: user.cpf,
-        deliveryId: order.id,
+        cpf: user.cpf.getRaw(),
+        deliveryId: order.id.toString(),
         role: Role.RECIPIENT,
       })
       expect(inMemoryUserDeliveriesRepositories.items).toHaveLength(1)
       expect(inMemoryUserDeliveriesRepositories.items[0]).toMatchObject({
-        cpf: user.cpf,
-        deliveryId: order.id,
+        cpf: user.cpf.getRaw(),
+        deliveryId: order.id.toString(),
         role: Role.RECIPIENT,
       })
     })

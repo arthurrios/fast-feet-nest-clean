@@ -33,10 +33,21 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "title": "New Order",
+  "title": "New Order 1",
   "description": "A new order",
   "coordinate": {
     "latitude": 0.0,
     "longitude": 0.0
   }
+}
+###
+
+# @name find_many_nearby
+POST {{baseUrl}}/orders/nearby
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "latitude": 0,
+  "longitude": 0
 }

@@ -13,8 +13,8 @@ export abstract class OrdersRepository {
     params: PaginationParams,
   ): Promise<Order[]>
 
-  abstract findManyNearbyCourier(
-    courierCoordinate: FindManyNearbyParams,
+  abstract findManyNearby(
+    coordinate: FindManyNearbyParams,
     params: PaginationParams,
   ): Promise<Order[]>
 

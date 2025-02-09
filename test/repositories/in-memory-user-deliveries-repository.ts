@@ -1,10 +1,8 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import {
   UserDeliveriesRepository,
   UserDelivery,
 } from '@/domain/user/application/repositories/user-deliveries-repository'
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 
 export class InMemoryUserDeliveriesRepository
   implements UserDeliveriesRepository
@@ -14,8 +12,7 @@ export class InMemoryUserDeliveriesRepository
   async createOrUpdate(delivery: UserDelivery): Promise<void> {
     const index = this.items.findIndex(
       (item) =>
-        item.deliveryId.equals(delivery.deliveryId) &&
-        item.role === delivery.role,
+        item.deliveryId === delivery.deliveryId && item.role === delivery.role,
     )
 
     if (index >= 0) {
@@ -25,16 +22,12 @@ export class InMemoryUserDeliveriesRepository
     }
   }
 
-  // async findByCpf(cpf: CPF, ): Promise<UserDelivery[]> {
-  //   return this.items.filter((item) => item.cpf.equals(cpf))
-  // }
-
   async findByCpf(
-    cpf: CPF,
+    cpf: string,
     { page }: PaginationParams,
   ): Promise<UserDelivery[]> {
     const deliveries = this.items
-      .filter((item) => item.cpf.equals(cpf))
+      .filter((item) => item.cpf === cpf)
       .slice((page - 1) * 20, page * 20)
 
     return deliveries

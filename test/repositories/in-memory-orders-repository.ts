@@ -31,16 +31,16 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     return orders
   }
 
-  async findManyNearbyCourier(
-    courierCoordinate: FindManyNearbyParams,
+  async findManyNearby(
+    { latitude, longitude }: FindManyNearbyParams,
     { page }: PaginationParams,
   ): Promise<Order[]> {
     return this.items
       .filter((item) => {
         const distance = getDistanceBetweenCoordinates(
           {
-            latitude: courierCoordinate.latitude,
-            longitude: courierCoordinate.longitude,
+            latitude,
+            longitude,
           },
           {
             latitude: item.coordinate.latitude,
