@@ -59,7 +59,14 @@ export class PrismaUsersRepository implements UsersRepository {
     })
   }
 
-  save(user: User): Promise<void> {
-    throw new Error('Method not implemented.')
+  async save(user: User): Promise<void> {
+    const data = PrismaUserMapper.toPrisma(user)
+
+    await this.prisma.user.update({
+      where: {
+        id: user.id.toString(),
+      },
+      data,
+    })
   }
 }

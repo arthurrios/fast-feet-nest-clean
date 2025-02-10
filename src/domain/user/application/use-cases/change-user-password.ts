@@ -7,6 +7,7 @@ import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-ad
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { HashGenerator } from '../cryptography/hash-generator'
 import { Role } from '../../@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface ChangeUserPasswordUseCaseRequest {
   requesterId: string
@@ -15,10 +16,11 @@ interface ChangeUserPasswordUseCaseRequest {
 }
 
 type ChangeUserPasswordUseCaseResponse = Either<
-  UnauthorizedAdminOnlyError,
-  { user: User }
+  UnauthorizedAdminOnlyError | ResourceNotFoundError,
+  null
 >
 
+@Injectable()
 export class ChangeUserPasswordUseCase {
   constructor(
     private authorizationService: AuthorizationService,
@@ -51,6 +53,6 @@ export class ChangeUserPasswordUseCase {
 
     await this.usersRepository.save(user)
 
-    return right({ user })
+    return right(null)
   }
 }
