@@ -1,5 +1,4 @@
 import { Coordinate } from 'test/utils/get-distance-between-coordinates'
-import { Order } from '../../enterprise/entities/order'
 import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { Either, left, right } from '@/core/either'
@@ -18,7 +17,7 @@ interface EditOrderUseCaseRequest {
 
 type EditOrderUseCaseResponse = Either<
   UnauthorizedAdminOnlyError | ResourceNotFoundError,
-  { order: Order }
+  null
 >
 
 export class EditOrderUseCase {
@@ -55,6 +54,6 @@ export class EditOrderUseCase {
 
     await this.ordersRepository.save(order)
 
-    return right({ order })
+    return right(null)
   }
 }

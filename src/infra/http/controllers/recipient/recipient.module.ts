@@ -9,6 +9,8 @@ import { GetRecipientsController } from './get-recipients.controller'
 import { GetRecipientsUseCase } from '@/domain/delivery/application/use-cases/get-recipients'
 import { GetRecipientController } from './get-recipient.controller'
 import { GetRecipientUseCase } from '@/domain/delivery/application/use-cases/get-recipient'
+import { EditRecipientController } from './edit-recipient.controller'
+import { EditRecipientUseCase } from '@/domain/delivery/application/use-cases/edit-recipient'
 
 @Module({
   imports: [DatabaseModule, UserModule, CryptographyModule],
@@ -16,17 +18,20 @@ import { GetRecipientUseCase } from '@/domain/delivery/application/use-cases/get
     RegisterRecipientController,
     GetRecipientsController,
     GetRecipientController,
+    EditRecipientController,
   ],
   providers: [
     AuthorizationService,
     RegisterRecipientUseCase,
     GetRecipientsUseCase,
     GetRecipientUseCase,
+    EditRecipientUseCase,
   ],
   exports: [
     RegisterRecipientUseCase,
     GetRecipientsUseCase,
     GetRecipientUseCase,
+    EditRecipientUseCase,
   ],
 })
 export class RecipientModule {}

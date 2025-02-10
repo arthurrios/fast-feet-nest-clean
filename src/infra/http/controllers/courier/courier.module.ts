@@ -9,6 +9,8 @@ import { GetCouriersController } from './get-couriers.controller'
 import { GetCouriersUseCase } from '@/domain/delivery/application/use-cases/get-couriers'
 import { GetCourierController } from './get-courier.controller'
 import { GetCourierUseCase } from '@/domain/delivery/application/use-cases/get-courier'
+import { EditCourierController } from './edit-courier.controller'
+import { EditCourierUseCase } from '@/domain/delivery/application/use-cases/edit-courier'
 
 @Module({
   imports: [DatabaseModule, UserModule, CryptographyModule],
@@ -16,13 +18,20 @@ import { GetCourierUseCase } from '@/domain/delivery/application/use-cases/get-c
     RegisterCourierController,
     GetCouriersController,
     GetCourierController,
+    EditCourierController,
   ],
   providers: [
     AuthorizationService,
     RegisterCourierUseCase,
     GetCouriersUseCase,
     GetCourierUseCase,
+    EditCourierUseCase,
   ],
-  exports: [RegisterCourierUseCase, GetCouriersUseCase, GetCourierUseCase],
+  exports: [
+    RegisterCourierUseCase,
+    GetCouriersUseCase,
+    GetCourierUseCase,
+    EditCourierUseCase,
+  ],
 })
 export class CourierModule {}

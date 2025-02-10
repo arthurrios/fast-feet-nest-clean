@@ -2,12 +2,11 @@ import { Either, left, right } from '@/core/either'
 import { RecipientsRepository } from '../repository/recipient-repository'
 import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
-import { Recipient } from '../../enterprise/entities/recipient'
 import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { AuthorizationService } from '@/core/services/authorization-service'
-import { Coordinate } from 'test/utils/get-distance-between-coordinates'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface EditRecipientUseCaseRequest {
   requesterId: string
@@ -15,14 +14,14 @@ interface EditRecipientUseCaseRequest {
   name: string
   cpf: string
   email: string
-  coordinate: Coordinate
 }
 
 type EditRecipientUseCaseResponse = Either<
   UnauthorizedAdminOnlyError | ResourceNotFoundError,
-  { recipient: Recipient }
+  null
 >
 
+@Injectable()
 export class EditRecipientUseCase {
   constructor(
     private authorizationService: AuthorizationService,
@@ -57,6 +56,6 @@ export class EditRecipientUseCase {
 
     await this.recipientsRepository.save(recipient)
 
-    return right({ recipient })
+    return right(null)
   }
 }
