@@ -11,6 +11,8 @@ import { GetRecipientController } from './get-recipient.controller'
 import { GetRecipientUseCase } from '@/domain/delivery/application/use-cases/get-recipient'
 import { EditRecipientController } from './edit-recipient.controller'
 import { EditRecipientUseCase } from '@/domain/delivery/application/use-cases/edit-recipient'
+import { DeleteRecipientController } from './delete-recipient.controller'
+import { DeleteRecipientUseCase } from '@/domain/delivery/application/use-cases/delete-recipient'
 
 @Module({
   imports: [DatabaseModule, UserModule, CryptographyModule],
@@ -19,6 +21,7 @@ import { EditRecipientUseCase } from '@/domain/delivery/application/use-cases/ed
     GetRecipientsController,
     GetRecipientController,
     EditRecipientController,
+    DeleteRecipientController,
   ],
   providers: [
     AuthorizationService,
@@ -26,12 +29,14 @@ import { EditRecipientUseCase } from '@/domain/delivery/application/use-cases/ed
     GetRecipientsUseCase,
     GetRecipientUseCase,
     EditRecipientUseCase,
+    DeleteRecipientUseCase,
   ],
   exports: [
     RegisterRecipientUseCase,
     GetRecipientsUseCase,
     GetRecipientUseCase,
     EditRecipientUseCase,
+    DeleteRecipientUseCase,
   ],
 })
 export class RecipientModule {}

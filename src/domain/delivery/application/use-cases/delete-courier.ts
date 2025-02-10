@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-e
 import { Either, left, right } from '@/core/either'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface DeleteCourierUseCaseRequest {
   requesterId: string
@@ -16,6 +17,7 @@ type DeleteCourierUseCaseResponse = Either<
   null
 >
 
+@Injectable()
 export class DeleteCourierUseCase {
   constructor(
     private authorizationService: AuthorizationService,
