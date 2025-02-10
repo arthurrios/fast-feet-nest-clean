@@ -1,63 +1,57 @@
+import { Role } from '@/domain/user/@types/role'
 import { AppModule } from '@/infra/app.module'
+import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { faker } from '@faker-js/faker'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
-import { generateValidCpf } from 'test/factories/faker-utils/generate-valid-cpf'
+import { makeRecipient } from 'test/factories/make-recipient'
+import { UserFactory } from 'test/factories/make-user'
 
 describe('Register recipient (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
+  let userFactory: UserFactory
   let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [UserFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
     prisma = moduleRef.get(PrismaService)
+    userFactory = moduleRef.get(UserFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
 
   test('[POST] /recipients', async () => {
-    const validCpf = generateValidCpf()
-    const validCpf2 = generateValidCpf()
+    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
 
-    const user = await prisma.user.create({
-      data: {
-        name: 'John Doe',
-        email: faker.internet.email(),
-        cpf: validCpf,
-        password: '123456',
-        role: 'ADMIN',
-      },
-    })
+    const accessToken = jwt.sign({ sub: user.id.toString() })
 
-    const accessToken = jwt.sign({ sub: user.id })
+    const recipient = makeRecipient()
 
     const response = await request(app.getHttpServer())
       .post(`/recipients`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        name: 'Justin Doe',
-        email: faker.internet.email(),
-        cpf: validCpf2,
-        password: '123456',
-        role: 'RECIPIENT',
+        name: recipient.name,
+        email: recipient.email,
+        cpf: recipient.cpf,
+        password: recipient.password,
+        role: Role.RECIPIENT,
       })
-
-    console.log(response)
 
     expect(response.statusCode).toBe(201)
 
     const recipientOnDatabase = await prisma.user.findUnique({
       where: {
-        cpf: validCpf2,
+        cpf: recipient.cpf.getRaw(),
       },
     })
 

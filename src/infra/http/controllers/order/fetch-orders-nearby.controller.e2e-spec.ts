@@ -1,78 +1,56 @@
-import { DomainEvents } from '@/core/events/domain-events'
+import { Role } from '@/domain/user/@types/role'
 import { AppModule } from '@/infra/app.module'
-import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { faker } from '@faker-js/faker'
+import { DatabaseModule } from '@/infra/database/database.module'
 import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
-import { generateValidCpf } from 'test/factories/faker-utils/generate-valid-cpf'
+import { OrderFactory } from 'test/factories/make-order'
+import { RecipientFactory } from 'test/factories/make-recipient'
+import { UserFactory } from 'test/factories/make-user'
 
 describe('Fetch orders nearby (E2E)', () => {
   let app: INestApplication
-  let prisma: PrismaService
+  let orderFactory: OrderFactory
+  let recipientFactory: RecipientFactory
+  let userFactory: UserFactory
   let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [AppModule, DatabaseModule],
+      providers: [OrderFactory, RecipientFactory, UserFactory],
     }).compile()
 
     app = moduleRef.createNestApplication()
-    prisma = moduleRef.get(PrismaService)
+    orderFactory = moduleRef.get(OrderFactory)
+    recipientFactory = moduleRef.get(RecipientFactory)
+    userFactory = moduleRef.get(UserFactory)
     jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
 
   test('[GET] /orders/nearby', async () => {
-    const validCpf = generateValidCpf()
+    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
 
-    const user = await prisma.user.create({
-      data: {
-        name: 'John Doe',
-        email: faker.internet.email(),
-        cpf: validCpf,
-        password: '123456',
-        role: 'ADMIN',
+    const accessToken = jwt.sign({ sub: user.id.toString() })
+
+    const recipient = await recipientFactory.makePrismaRecipient()
+
+    const order1 = await orderFactory.makePrismaOrder({
+      recipientId: recipient.id,
+      coordinate: {
+        latitude: 0,
+        longitude: 0,
       },
     })
-
-    const accessToken = jwt.sign({ sub: user.id })
-
-    const recipient = await prisma.user.create({
-      data: {
-        name: 'Jane Doe',
-        email: faker.internet.email(),
-        cpf: generateValidCpf(),
-        password: '123456',
-        role: 'RECIPIENT',
+    const order2 = await orderFactory.makePrismaOrder({
+      recipientId: recipient.id,
+      coordinate: {
+        latitude: 0,
+        longitude: 0,
       },
-    })
-
-    await prisma.order.createMany({
-      data: [
-        {
-          courierId: null,
-          recipientId: recipient.id,
-          status: 'PENDING',
-          latitude: 0,
-          longitude: 0,
-          slug: 'order-title',
-          title: 'Order title',
-          description: 'Order description',
-        },
-        {
-          courierId: null,
-          recipientId: recipient.id,
-          status: 'PENDING',
-          latitude: 0,
-          longitude: 0,
-          slug: 'order-title-1',
-          title: 'Order title 1',
-          description: 'Order description',
-        },
-      ],
     })
 
     const response = await request(app.getHttpServer())
@@ -81,16 +59,16 @@ describe('Fetch orders nearby (E2E)', () => {
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
-      orders: [
+      orders: expect.arrayContaining([
         expect.objectContaining({
-          title: 'Order title',
-          description: 'Order description',
+          title: order1.title,
+          description: order1.description,
         }),
         expect.objectContaining({
-          title: 'Order title 1',
-          description: 'Order description',
+          title: order2.title,
+          description: order2.description,
         }),
-      ],
+      ]),
     })
   })
 })

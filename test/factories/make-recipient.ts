@@ -6,6 +6,9 @@ import {
 import { faker } from '@faker-js/faker'
 import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 import { generateValidCpf } from './faker-utils/generate-valid-cpf'
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { PrismaRecipientMapper } from '@/infra/database/prisma/mappers/prisma-recipient-mapper'
 
 export function makeRecipient(
   override?: Partial<RecipientProps>,
@@ -24,4 +27,21 @@ export function makeRecipient(
   )
 
   return recipient
+}
+
+@Injectable()
+export class RecipientFactory {
+  constructor(private prisma: PrismaService) {}
+
+  async makePrismaRecipient(
+    data: Partial<RecipientProps> = {},
+  ): Promise<Recipient> {
+    const recipient = makeRecipient(data)
+
+    await this.prisma.user.create({
+      data: PrismaRecipientMapper.toPrisma(recipient),
+    })
+
+    return recipient
+  }
 }

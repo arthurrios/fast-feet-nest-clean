@@ -25,6 +25,7 @@ export class PrismaRecipientMapper {
       cpf: recipient.cpf.getRaw(),
       email: recipient.email,
       name: recipient.name,
+      role: 'RECIPIENT',
       password: recipient.password,
       createdAt: recipient.createdAt,
       updatedAt: recipient.updatedAt,

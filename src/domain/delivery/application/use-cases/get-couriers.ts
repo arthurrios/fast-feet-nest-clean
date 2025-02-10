@@ -6,6 +6,7 @@ import { AuthorizationService } from '@/core/services/authorization-service'
 import { CouriersRepository } from '../repository/courier-repository'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface GetCouriersUseCaseRequest {
   requesterId: string
@@ -17,6 +18,7 @@ type GetCouriersUseCaseResponse = Either<
   { couriers: Courier[] }
 >
 
+@Injectable()
 export class GetCouriersUseCase {
   constructor(
     private authorizationService: AuthorizationService,

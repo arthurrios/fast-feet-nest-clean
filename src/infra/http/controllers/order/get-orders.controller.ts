@@ -13,16 +13,16 @@ import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
 import { OrderPresenter } from '../../presenters/order-presenter'
 import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
 
-const pageQuerySchema = z
+export const pageQuerySchema = z
   .string()
   .optional()
   .default('1')
   .transform(Number)
   .pipe(z.number().min(1))
 
-const queryValidationPipe = new ZodValidationPipe(pageQuerySchema)
+export const pageQueryValidationPipe = new ZodValidationPipe(pageQuerySchema)
 
-type PageQuerySchema = z.infer<typeof pageQuerySchema>
+export type PageQuerySchema = z.infer<typeof pageQuerySchema>
 
 @Controller('/orders')
 export class GetOrdersController {
@@ -30,7 +30,7 @@ export class GetOrdersController {
 
   @Get()
   async handle(
-    @Query('page', queryValidationPipe) page: PageQuerySchema,
+    @Query('page', pageQueryValidationPipe) page: PageQuerySchema,
     @CurrentUser() user: UserPayload,
   ) {
     const result = await this.getOrders.execute({
