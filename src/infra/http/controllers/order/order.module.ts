@@ -33,4 +33,4 @@ import { GetOrderController } from './get-order.controller'
     GetOrderUseCase,
   ],
 })
-export class DeliveryModule {}
+export class OrderModule {}
