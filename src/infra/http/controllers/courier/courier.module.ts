@@ -7,11 +7,22 @@ import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
 import { RegisterCourierController } from './register-courier.controller'
 import { GetCouriersController } from './get-couriers.controller'
 import { GetCouriersUseCase } from '@/domain/delivery/application/use-cases/get-couriers'
+import { GetCourierController } from './get-courier.controller'
+import { GetCourierUseCase } from '@/domain/delivery/application/use-cases/get-courier'
 
 @Module({
   imports: [DatabaseModule, UserModule, CryptographyModule],
-  controllers: [RegisterCourierController, GetCouriersController],
-  providers: [AuthorizationService, RegisterCourierUseCase, GetCouriersUseCase],
-  exports: [RegisterCourierUseCase, GetCouriersUseCase],
+  controllers: [
+    RegisterCourierController,
+    GetCouriersController,
+    GetCourierController,
+  ],
+  providers: [
+    AuthorizationService,
+    RegisterCourierUseCase,
+    GetCouriersUseCase,
+    GetCourierUseCase,
+  ],
+  exports: [RegisterCourierUseCase, GetCouriersUseCase, GetCourierUseCase],
 })
 export class CourierModule {}

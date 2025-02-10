@@ -6,6 +6,7 @@ import { AuthorizationService } from '@/core/services/authorization-service'
 import { RecipientsRepository } from '../repository/recipient-repository'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface GetRecipientUseCaseRequest {
   requesterId: string
@@ -13,10 +14,11 @@ interface GetRecipientUseCaseRequest {
 }
 
 type GetRecipientUseCaseResponse = Either<
-  UnauthorizedAdminOnlyError,
-  ResourceNotFoundError | { recipient: Recipient }
+  UnauthorizedAdminOnlyError | ResourceNotFoundError,
+  { recipient: Recipient }
 >
 
+@Injectable()
 export class GetRecipientUseCase {
   constructor(
     private authorizationService: AuthorizationService,

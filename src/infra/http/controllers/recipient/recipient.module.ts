@@ -7,15 +7,26 @@ import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
 import { RegisterRecipientController } from './register-recipient.controller'
 import { GetRecipientsController } from './get-recipients.controller'
 import { GetRecipientsUseCase } from '@/domain/delivery/application/use-cases/get-recipients'
+import { GetRecipientController } from './get-recipient.controller'
+import { GetRecipientUseCase } from '@/domain/delivery/application/use-cases/get-recipient'
 
 @Module({
   imports: [DatabaseModule, UserModule, CryptographyModule],
-  controllers: [RegisterRecipientController, GetRecipientsController],
+  controllers: [
+    RegisterRecipientController,
+    GetRecipientsController,
+    GetRecipientController,
+  ],
   providers: [
     AuthorizationService,
     RegisterRecipientUseCase,
     GetRecipientsUseCase,
+    GetRecipientUseCase,
   ],
-  exports: [RegisterRecipientUseCase, GetRecipientsUseCase],
+  exports: [
+    RegisterRecipientUseCase,
+    GetRecipientsUseCase,
+    GetRecipientUseCase,
+  ],
 })
 export class RecipientModule {}

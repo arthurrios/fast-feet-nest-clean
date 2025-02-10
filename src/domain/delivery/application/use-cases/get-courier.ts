@@ -6,6 +6,7 @@ import { AuthorizationService } from '@/core/services/authorization-service'
 import { CouriersRepository } from '../repository/courier-repository'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface GetCourierUseCaseRequest {
   requesterId: string
@@ -13,10 +14,11 @@ interface GetCourierUseCaseRequest {
 }
 
 type GetCourierUseCaseResponse = Either<
-  UnauthorizedAdminOnlyError,
-  ResourceNotFoundError | { courier: Courier }
+  UnauthorizedAdminOnlyError | ResourceNotFoundError,
+  { courier: Courier }
 >
 
+@Injectable()
 export class GetCourierUseCase {
   constructor(
     private authorizationService: AuthorizationService,
