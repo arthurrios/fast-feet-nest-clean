@@ -40,10 +40,6 @@ describe('Register Courier', () => {
         email: courier.email,
         cpf: courier.cpf.getRaw(),
         password: courier.password,
-        coordinate: {
-          latitude: 0,
-          longitude: 0,
-        },
       },
     })
 
@@ -65,10 +61,6 @@ describe('Register Courier', () => {
         email: courier.email,
         cpf: courier.cpf.getRaw(),
         password: courier.password,
-        coordinate: {
-          latitude: 0,
-          longitude: 0,
-        },
       },
     })
 
@@ -90,10 +82,6 @@ describe('Register Courier', () => {
         email: newCourier.email,
         cpf: newCourier.cpf.getRaw(),
         password: newCourier.password,
-        coordinate: {
-          latitude: 0,
-          longitude: 0,
-        },
       },
     })
 

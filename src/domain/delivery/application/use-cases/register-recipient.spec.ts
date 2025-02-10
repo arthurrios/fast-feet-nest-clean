@@ -40,10 +40,6 @@ describe('Register Recipient', () => {
         email: recipient.email,
         cpf: recipient.cpf.getRaw(),
         password: recipient.password,
-        coordinate: {
-          latitude: 0,
-          longitude: 0,
-        },
       },
     })
 
@@ -65,10 +61,6 @@ describe('Register Recipient', () => {
         email: recipient.email,
         cpf: recipient.cpf.getRaw(),
         password: recipient.password,
-        coordinate: {
-          latitude: 0,
-          longitude: 0,
-        },
       },
     })
 
@@ -90,10 +82,6 @@ describe('Register Recipient', () => {
         email: newRecipient.email,
         cpf: newRecipient.cpf.getRaw(),
         password: newRecipient.password,
-        coordinate: {
-          latitude: 0,
-          longitude: 0,
-        },
       },
     })
 

@@ -7,9 +7,9 @@ import { OrdersRepository } from '@/domain/delivery/application/repository/order
 import { CouriersRepository } from '@/domain/delivery/application/repository/courier-repository'
 import { PrismaCouriersRepository } from './prisma/repositories/prisma-couriers-repository'
 import { RecipientsRepository } from '@/domain/delivery/application/repository/recipient-repository'
-import { PrismaRecipientsRepository } from './prisma/repositories/prisma-recipients-repository'
 import { UsersRepository } from '@/domain/user/application/repositories/users-repository'
 import { PrismaUsersRepository } from './prisma/repositories/prisma-users-repository'
+import { PrismaRecipientsRepository } from './prisma/repositories/prisma-recipients-repository'
 
 @Module({
   providers: [

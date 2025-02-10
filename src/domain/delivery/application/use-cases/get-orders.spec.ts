@@ -33,7 +33,7 @@ describe('Get Orders', () => {
 
     const result = await sut.execute({
       requesterId: adminId.toValue(),
-      params: { page: 1 },
+      page: 1,
     })
 
     expect(result.isRight() && result.value.orders).toHaveLength(20)
@@ -43,7 +43,7 @@ describe('Get Orders', () => {
 
     const result = await sut.execute({
       requesterId: requesterId.toString(),
-      params: { page: 1 },
+      page: 1,
     })
 
     expect(result.isLeft()).toBe(true)

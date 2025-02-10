@@ -75,25 +75,4 @@ export class Courier
 
     return courier
   }
-
-  static fromUser(user: User): Courier {
-    if (user.role !== Role.COURIER) {
-      throw new Error('User is not a courier')
-    }
-
-    const courier = new Courier(
-      {
-        name: user.name,
-        cpf: user.cpf,
-        email: user.email,
-        password: user.password,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt,
-      },
-      user.id,
-    )
-
-    courier.addDomainEvent(new CourierRegisteredEvent(courier))
-    return courier
-  }
 }

@@ -1,12 +1,9 @@
-import { UsersRepository } from '@/domain/user/application/repositories/users-repository'
-import { User } from '@/domain/user/enterprise/entities/user'
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { PrismaUserMapper } from '../mappers/prisma-user-mapper'
 import { CouriersRepository } from '@/domain/delivery/application/repository/courier-repository'
 import { Courier } from '@/domain/delivery/enterprise/entities/courier'
 import { PaginationParams } from '@/core/repositories/pagination-params'
+import { PrismaCourierMapper } from '../mappers/prisma-courier-mapper'
 
 @Injectable()
 export class PrismaCouriersRepository implements CouriersRepository {
@@ -23,28 +20,59 @@ export class PrismaCouriersRepository implements CouriersRepository {
       return null
     }
 
-    const user = PrismaUserMapper.toDomain(rawUser)
-
-    return Courier.fromUser(user)
+    return PrismaCourierMapper.toDomain(rawUser)
   }
 
-  findByCpf(cpf: string): Promise<Courier | null> {
-    throw new Error('Method not implemented.')
+  async findByCpf(cpf: string): Promise<Courier | null> {
+    const rawUser = await this.prisma.user.findUnique({
+      where: {
+        cpf,
+      },
+    })
+
+    if (!rawUser) {
+      return null
+    }
+
+    return PrismaCourierMapper.toDomain(rawUser)
   }
 
-  findMany(params: PaginationParams): Promise<Courier[]> {
-    throw new Error('Method not implemented.')
+  async findMany({ page }: PaginationParams): Promise<Courier[]> {
+    const rawUsers = await this.prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return rawUsers.map(PrismaCourierMapper.toDomain)
   }
 
-  create(courier: Courier): Promise<void> {
-    throw new Error('Method not implemented.')
+  async create(courier: Courier): Promise<void> {
+    const data = PrismaCourierMapper.toPrisma(courier)
+
+    await this.prisma.user.create({
+      data,
+    })
   }
 
-  save(courier: Courier): Promise<void> {
-    throw new Error('Method not implemented.')
+  async save(courier: Courier): Promise<void> {
+    const data = PrismaCourierMapper.toPrisma(courier)
+
+    await this.prisma.user.update({
+      where: {
+        id: courier.id.toString(),
+      },
+      data,
+    })
   }
 
-  delete(courier: Courier): Promise<void> {
-    throw new Error('Method not implemented.')
+  async delete(courier: Courier): Promise<void> {
+    const data = PrismaCourierMapper.toPrisma(courier)
+
+    await this.prisma.user.delete({
+      where: {
+        id: courier.id.toString(),
+      },
+    })
   }
 }
