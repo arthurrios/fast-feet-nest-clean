@@ -34,7 +34,6 @@ const bodyValidationPipe = new ZodValidationPipe(createOrderBodySchema)
 type CreateOrderBodySchema = z.infer<typeof createOrderBodySchema>
 
 @Controller('/orders/:recipientId')
-@UseGuards(JwtAuthGuard)
 export class CreateOrderController {
   constructor(private createOrder: CreateOrderUseCase) {}
 

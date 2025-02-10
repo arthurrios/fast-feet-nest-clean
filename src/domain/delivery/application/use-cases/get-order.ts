@@ -6,6 +6,7 @@ import { AuthorizationService } from '@/core/services/authorization-service'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { OrdersRepository } from '../repository/orders-repository'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface GetOrderUseCaseRequest {
   requesterId: string
@@ -13,10 +14,11 @@ interface GetOrderUseCaseRequest {
 }
 
 type GetOrderUseCaseResponse = Either<
-  UnauthorizedAdminOnlyError,
-  ResourceNotFoundError | { order: Order }
+  UnauthorizedAdminOnlyError | ResourceNotFoundError,
+  { order: Order }
 >
 
+@Injectable()
 export class GetOrderUseCase {
   constructor(
     private authorizationService: AuthorizationService,

@@ -25,6 +25,7 @@ const queryValidationPipe = new ZodValidationPipe(fetchOrdersNearbyQuerySchema)
 type FetchOrdersNearbyQuerySchema = z.infer<typeof fetchOrdersNearbyQuerySchema>
 
 @Controller('/orders/nearby')
+@UseGuards(JwtAuthGuard)
 export class FetchOrdersNearbyController {
   constructor(private fetchOrdersNearby: FetchOrdersNearbyUseCase) {}
 

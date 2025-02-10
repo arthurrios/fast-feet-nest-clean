@@ -6,10 +6,11 @@ import { AuthorizationService } from '@/core/services/authorization-service'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { OrdersRepository } from '../repository/orders-repository'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface GetOrdersUseCaseRequest {
   requesterId: string
-  params: PaginationParams
+  page: number
 }
 
 type GetOrdersUseCaseResponse = Either<
@@ -17,6 +18,7 @@ type GetOrdersUseCaseResponse = Either<
   { orders: Order[] }
 >
 
+@Injectable()
 export class GetOrdersUseCase {
   constructor(
     private authorizationService: AuthorizationService,
@@ -25,7 +27,7 @@ export class GetOrdersUseCase {
 
   async execute({
     requesterId,
-    params,
+    page,
   }: GetOrdersUseCaseRequest): Promise<GetOrdersUseCaseResponse> {
     const authResult = await this.authorizationService.verifyRole(
       new UniqueEntityID(requesterId),
@@ -36,7 +38,7 @@ export class GetOrdersUseCase {
       return left(authResult.value)
     }
 
-    const orders = await this.ordersRepository.findMany(params)
+    const orders = await this.ordersRepository.findMany({ page })
 
     return right({ orders })
   }
