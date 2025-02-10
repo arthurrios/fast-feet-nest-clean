@@ -5,11 +5,13 @@ import { RegisterCourierUseCase } from '@/domain/delivery/application/use-cases/
 import { AuthorizationService } from '@/core/services/authorization-service'
 import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
 import { RegisterCourierController } from './register-courier.controller'
+import { GetCouriersController } from './get-couriers.controller'
+import { GetCouriersUseCase } from '@/domain/delivery/application/use-cases/get-couriers'
 
 @Module({
   imports: [DatabaseModule, UserModule, CryptographyModule],
-  controllers: [RegisterCourierController],
-  providers: [AuthorizationService, RegisterCourierUseCase],
-  exports: [RegisterCourierUseCase],
+  controllers: [RegisterCourierController, GetCouriersController],
+  providers: [AuthorizationService, RegisterCourierUseCase, GetCouriersUseCase],
+  exports: [RegisterCourierUseCase, GetCouriersUseCase],
 })
 export class CourierModule {}
