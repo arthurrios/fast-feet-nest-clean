@@ -11,6 +11,7 @@ import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { CreateUserUseCase } from '@/domain/user/application/use-cases/create-user'
 import { Role } from '@/domain/user/@types/role'
 import { UserAlreadyExistsError } from '@/domain/user/application/use-cases/errors/user-already-exists-error'
+import { Public } from '@/infra/auth/public'
 
 const registerUserBodySchema = z.object({
   name: z.string(),
@@ -25,6 +26,7 @@ const bodyValidationPipe = new ZodValidationPipe(registerUserBodySchema)
 type RegisterUserBodySchema = z.infer<typeof registerUserBodySchema>
 
 @Controller('/users')
+@Public()
 export class CreateUserController {
   constructor(private createUser: CreateUserUseCase) {}
 
