@@ -5,43 +5,34 @@ import { z } from 'zod'
 import { FetchOrdersNearbyUseCase } from '@/domain/delivery/application/use-cases/fetch-orders-nearby'
 import { OrderPresenter } from '../../presenters/order-presenter'
 
-const pageQueryParamSchema = z
-  .string()
-  .optional()
-  .default('1')
-  .transform(Number)
-  .pipe(z.number().min(1))
-
-export const pageQueryValidationPipe = new ZodValidationPipe(
-  pageQueryParamSchema,
-)
-
-export type PageQueryParamSchema = z.infer<typeof pageQueryParamSchema>
-
-const fetchOrdersNearbyCourierBodySchema = z.object({
-  latitude: z.number(),
-  longitude: z.number(),
+const fetchOrdersNearbyQuerySchema = z.object({
+  latitude: z.coerce.number().refine((value) => {
+    return Math.abs(value) <= 90
+  }),
+  longitude: z.coerce.number().refine((value) => {
+    return Math.abs(value) <= 180
+  }),
+  page: z
+    .string()
+    .optional()
+    .default('1')
+    .transform(Number)
+    .pipe(z.number().min(1)),
 })
 
-const bodyValidationPipe = new ZodValidationPipe(
-  fetchOrdersNearbyCourierBodySchema,
-)
+const queryValidationPipe = new ZodValidationPipe(fetchOrdersNearbyQuerySchema)
 
-type FetchOrdersNearbyBodySchema = z.infer<
-  typeof fetchOrdersNearbyCourierBodySchema
->
+type FetchOrdersNearbyQuerySchema = z.infer<typeof fetchOrdersNearbyQuerySchema>
 
 @Controller('/orders/nearby')
-@UseGuards(JwtAuthGuard)
 export class FetchOrdersNearbyController {
   constructor(private fetchOrdersNearby: FetchOrdersNearbyUseCase) {}
 
   @Get()
   async handle(
-    @Body(bodyValidationPipe) body: FetchOrdersNearbyBodySchema,
-    @Query('page', pageQueryValidationPipe) page: PageQueryParamSchema,
+    @Query(queryValidationPipe) query: FetchOrdersNearbyQuerySchema,
   ) {
-    const { latitude, longitude } = body
+    const { latitude, longitude, page } = query
 
     const result = await this.fetchOrdersNearby.execute({
       latitude,

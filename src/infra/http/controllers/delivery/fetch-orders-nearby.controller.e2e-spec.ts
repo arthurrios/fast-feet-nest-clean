@@ -76,13 +76,8 @@ describe('Fetch orders nearby (E2E)', () => {
     })
 
     const response = await request(app.getHttpServer())
-      .get(`/orders/nearby`)
+      .get(`/orders/nearby?latitude=0&longitude=0&page=1`)
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        latitude: 0,
-        longitude: 0,
-        params: { page: 1 },
-      })
 
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
