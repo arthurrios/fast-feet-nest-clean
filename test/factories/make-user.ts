@@ -19,7 +19,7 @@ export function makeUser(override: Partial<UserProps>, id?: UniqueEntityID) {
       email: faker.internet.email(),
       password: faker.internet.password(),
       cpf,
-      role: Role.COURIER,
+      roles: [Role.COURIER],
       ...override,
     },
     id,

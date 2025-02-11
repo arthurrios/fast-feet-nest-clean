@@ -26,7 +26,7 @@ describe('Create User', () => {
       cpf: user.cpf.getRaw(),
       email: user.email,
       password: user.password,
-      role: user.role,
+      roles: user.roles,
     })
 
     expect(result.isRight()).toBe(true)
@@ -41,7 +41,7 @@ describe('Create User', () => {
       cpf: user.cpf.getRaw(),
       email: user.email,
       password: user.password,
-      role: user.role,
+      roles: user.roles,
     })
 
     const hashedPassword = await fakeHasher.hash('123456')

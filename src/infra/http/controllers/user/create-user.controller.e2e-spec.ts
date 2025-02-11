@@ -1,3 +1,4 @@
+import { Role } from '@/domain/user/@types/role'
 import { AppModule } from '@/infra/app.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { faker } from '@faker-js/faker'
@@ -24,18 +25,26 @@ describe('Register user (E2E)', () => {
   test('[POST] /users', async () => {
     const validCpf = generateValidCpf()
 
-    const response = await request(app.getHttpServer()).post('/users').send({
-      name: 'John Doe',
-      email: faker.internet.email(),
-      cpf: validCpf,
-      password: '123456',
-    })
+    const response = await request(app.getHttpServer())
+      .post('/users')
+      .send({
+        name: 'John Doe',
+        email: faker.internet.email(),
+        cpf: validCpf,
+        password: '123456',
+        roles: [Role.COURIER],
+      })
 
     expect(response.status).toBe(201)
 
     const userOnDatabase = await prisma.user.findUnique({
       where: {
         cpf: validCpf,
+        roles: {
+          some: {
+            role: 'COURIER',
+          },
+        },
       },
     })
 

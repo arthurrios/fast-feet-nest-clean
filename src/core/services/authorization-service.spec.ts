@@ -16,7 +16,7 @@ describe('Authorization Service', () => {
 
   it('should authorize an admin successfully', async () => {
     const adminId = new UniqueEntityID('admin-id-123')
-    const adminUser = makeUser({ role: Role.ADMIN }, adminId)
+    const adminUser = makeUser({ roles: [Role.ADMIN] }, adminId)
 
     inMemoryUsersRepository.create(adminUser)
 
@@ -36,7 +36,7 @@ describe('Authorization Service', () => {
 
   it('should deny access if the user is not an admin', async () => {
     const userId = new UniqueEntityID('user-id-123')
-    const user = makeUser({ role: Role.COURIER }, userId)
+    const user = makeUser({ roles: [Role.COURIER] }, userId)
 
     inMemoryUsersRepository.create(user)
 

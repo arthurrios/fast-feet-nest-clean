@@ -32,7 +32,7 @@ describe('Fetch orders nearby (E2E)', () => {
   })
 
   test('[GET] /orders/nearby', async () => {
-    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
+    const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 

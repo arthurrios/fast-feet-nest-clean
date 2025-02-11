@@ -32,7 +32,7 @@ describe('Delete courier (E2E)', () => {
   })
 
   test('[DELETE] /couriers/:id', async () => {
-    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
+    const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
@@ -47,6 +47,11 @@ describe('Delete courier (E2E)', () => {
     const courierOnDatabase = await prisma.user.findUnique({
       where: {
         cpf: courier.cpf.getRaw(),
+        roles: {
+          some: {
+            role: Role.COURIER,
+          },
+        },
       },
     })
 

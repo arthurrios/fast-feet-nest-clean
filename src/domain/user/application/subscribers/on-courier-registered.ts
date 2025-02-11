@@ -22,7 +22,7 @@ export class OnCourierCreated implements EventHandler {
       email: courier.email,
       cpf: courier.cpf.getRaw(),
       password: courier.password,
-      role: Role.COURIER,
+      roles: [Role.COURIER],
     })
   }
 }

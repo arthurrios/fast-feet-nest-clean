@@ -32,7 +32,7 @@ describe('Delete recipient (E2E)', () => {
   })
 
   test('[DELETE] /recipients/:id', async () => {
-    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
+    const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 

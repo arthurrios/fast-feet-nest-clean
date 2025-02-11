@@ -25,7 +25,11 @@ export class PrismaCourierMapper {
       cpf: courier.cpf.getRaw(),
       email: courier.email,
       name: courier.name,
-      role: 'COURIER',
+      roles: {
+        create: {
+          role: 'COURIER',
+        },
+      },
       password: courier.password,
       createdAt: courier.createdAt,
       updatedAt: courier.updatedAt,

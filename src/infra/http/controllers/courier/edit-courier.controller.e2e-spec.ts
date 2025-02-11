@@ -32,7 +32,7 @@ describe('Edit recipient (E2E)', () => {
   })
 
   test('[PUT] /recipients/:id', async () => {
-    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
+    const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 

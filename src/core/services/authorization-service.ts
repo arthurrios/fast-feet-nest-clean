@@ -15,7 +15,7 @@ export class AuthorizationService {
   ): Promise<Either<UnauthorizedAdminOnlyError, void>> {
     const user = await this.usersRepository.findById(id.toValue())
 
-    if (!user || user.role !== requiredRole) {
+    if (!user || !user.roles.includes(requiredRole)) {
       console.warn(
         `Authorization denied. User with ID: ${id.toValue()} attempted to access an admin-only resource.`,
       )

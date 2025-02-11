@@ -1,9 +1,11 @@
 import { UsersRepository } from '@/domain/user/application/repositories/users-repository'
 import { User } from '@/domain/user/enterprise/entities/user'
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '../prisma.service'
-import { PrismaUserMapper } from '../mappers/prisma-user-mapper'
+import {
+  PrismaUserMapper,
+  PrismaUserWithRoles,
+} from '../mappers/prisma-user-mapper'
 
 @Injectable()
 export class PrismaUsersRepository implements UsersRepository {
@@ -14,13 +16,16 @@ export class PrismaUsersRepository implements UsersRepository {
       where: {
         id,
       },
+      include: {
+        roles: true,
+      },
     })
 
     if (!user) {
       return null
     }
 
-    return PrismaUserMapper.toDomain(user)
+    return PrismaUserMapper.toDomain(user as PrismaUserWithRoles)
   }
 
   async findByCpf(cpf: string): Promise<User | null> {
@@ -28,19 +33,8 @@ export class PrismaUsersRepository implements UsersRepository {
       where: {
         cpf,
       },
-    })
-
-    if (!user) {
-      return null
-    }
-
-    return PrismaUserMapper.toDomain(user)
-  }
-
-  async findByEmail(email: string): Promise<User | null> {
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email,
+      include: {
+        roles: true,
       },
     })
 
@@ -48,7 +42,24 @@ export class PrismaUsersRepository implements UsersRepository {
       return null
     }
 
-    return PrismaUserMapper.toDomain(user)
+    return PrismaUserMapper.toDomain(user as PrismaUserWithRoles)
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email,
+      },
+      include: {
+        roles: true,
+      },
+    })
+
+    if (!user) {
+      return null
+    }
+
+    return PrismaUserMapper.toDomain(user as PrismaUserWithRoles)
   }
 
   async create(user: User): Promise<void> {

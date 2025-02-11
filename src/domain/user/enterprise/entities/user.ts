@@ -10,7 +10,7 @@ export interface UserProps {
   cpf: CPF
   email: string
   password: string
-  role: Role
+  roles: Role[]
   createdAt: Date
   updatedAt?: Date | null
 }
@@ -42,8 +42,8 @@ export class User<
     return this.props.updatedAt
   }
 
-  get role() {
-    return this.props.role
+  get roles() {
+    return this.props.roles
   }
 
   private touch() {

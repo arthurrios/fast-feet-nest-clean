@@ -33,14 +33,25 @@ model User {
   email     String    @unique
   cpf       String    @unique
   password  String
-  role      Role      @default(COURIER)
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  orders     Order[] @relation("recipient")
-  assignedTo Order[] @relation("courier")
+  orders     Order[]    @relation("recipient")
+  assignedTo Order[]    @relation("courier")
+  roles      UserRole[]
 
   @@map("users")
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  role   Role
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([role])
+  @@map("user_roles")
 }
 
 model Order {

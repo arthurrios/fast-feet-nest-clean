@@ -18,7 +18,7 @@ const registerUserBodySchema = z.object({
   email: z.string().email(),
   cpf: z.string().length(11),
   password: z.string().min(6),
-  role: z.nativeEnum(Role).optional(),
+  roles: z.array(z.nativeEnum(Role)),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(registerUserBodySchema)
@@ -33,14 +33,14 @@ export class CreateUserController {
   @Post()
   @HttpCode(201)
   async handle(@Body(bodyValidationPipe) body: RegisterUserBodySchema) {
-    const { email, name, cpf, password, role } = body
+    const { email, name, cpf, password, roles } = body
 
     const result = await this.createUser.execute({
       name,
       email,
       cpf,
       password,
-      role: role ?? Role.COURIER,
+      roles: roles ?? [Role.COURIER],
     })
 
     if (result.isLeft()) {

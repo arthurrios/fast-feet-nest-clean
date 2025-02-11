@@ -1,5 +1,3 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { CPF } from '../../enterprise/entities/value-objects/cpf'
 import { Role } from '../../@types/role'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 

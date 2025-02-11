@@ -13,7 +13,7 @@ interface CreateUserUseCaseRequest {
   email: string
   cpf: string
   password: string
-  role: Role
+  roles: Role[]
 }
 
 type CreateUserUseCaseResponse = Either<
@@ -33,7 +33,7 @@ export class CreateUserUseCase {
     email,
     cpf,
     password,
-    role,
+    roles,
   }: CreateUserUseCaseRequest): Promise<CreateUserUseCaseResponse> {
     let cpfValue: CPF
 
@@ -62,7 +62,7 @@ export class CreateUserUseCase {
       email,
       name,
       password: hashedPassword,
-      role,
+      roles,
     })
 
     await this.usersRepository.create(user)

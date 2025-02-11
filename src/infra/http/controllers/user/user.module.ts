@@ -9,6 +9,8 @@ import { AuthenticateUseCase } from '@/domain/user/application/use-cases/authent
 import { CreateUserController } from './create-user.controller'
 import { AuthenticateController } from './authenticate.controller'
 import { ChangeUserPasswordController } from './change-user-password.controller'
+import { FetchUserDeliveriesController } from './fetch-user-deliveries.controller'
+import { FetchUserDeliveriesUseCase } from '@/domain/user/application/use-cases/fetch-user-deliveries'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -16,13 +18,20 @@ import { ChangeUserPasswordController } from './change-user-password.controller'
     CreateUserController,
     AuthenticateController,
     ChangeUserPasswordController,
+    FetchUserDeliveriesController,
   ],
   providers: [
     AuthorizationService,
     CreateUserUseCase,
     AuthenticateUseCase,
     ChangeUserPasswordUseCase,
+    FetchUserDeliveriesUseCase,
   ],
-  exports: [CreateUserUseCase, AuthenticateUseCase, ChangeUserPasswordUseCase],
+  exports: [
+    CreateUserUseCase,
+    AuthenticateUseCase,
+    ChangeUserPasswordUseCase,
+    FetchUserDeliveriesUseCase,
+  ],
 })
 export class UserModule {}

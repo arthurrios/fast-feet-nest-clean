@@ -32,7 +32,7 @@ describe('Change user password (E2E)', () => {
   })
 
   test('[POST] /users/:id/password', async () => {
-    const user = await userFactory.makePrismaUser({ role: Role.ADMIN })
+    const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 

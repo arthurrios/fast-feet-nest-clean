@@ -32,7 +32,7 @@ describe('On Order Created', () => {
   it('should create a new user delivery for the recipient', async () => {
     const user = makeUser({
       cpf: CPF.create(generateValidCpf()),
-      role: Role.COURIER,
+      roles: [Role.COURIER],
     })
 
     inMemoryUsersRepository.create(user)

@@ -5,6 +5,7 @@ import {
 } from '../repositories/user-deliveries-repository'
 import { UsersRepository } from '../repositories/users-repository'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface FetchUserDeliveriesRequest {
   page: number
@@ -16,6 +17,7 @@ type FetchUserDeliveriesResponse = Either<
   { deliveries: UserDelivery[] }
 >
 
+@Injectable()
 export class FetchUserDeliveriesUseCase {
   constructor(
     private usersRepository: UsersRepository,
@@ -37,7 +39,7 @@ export class FetchUserDeliveriesUseCase {
       {
         page,
       },
-    )
+    )    
 
     return right({ deliveries })
   }

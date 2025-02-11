@@ -74,7 +74,7 @@ export class Recipient
   }
 
   static fromUser(user: User): Recipient {
-    if (user.role !== Role.RECIPIENT) {
+    if (!user.roles.includes(Role.RECIPIENT)) {
       throw new Error('User is not a recipient')
     }
 

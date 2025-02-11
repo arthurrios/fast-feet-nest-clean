@@ -36,10 +36,49 @@ export class CourierFactory {
   async makePrismaCourier(data: Partial<CourierProps> = {}): Promise<Courier> {
     const courier = makeCourier(data)
 
-    await this.prisma.user.create({
-      data: PrismaCourierMapper.toPrisma(courier),
+    const finalCpf =
+      data.cpf && typeof data.cpf === 'string'
+        ? data.cpf
+        : data.cpf && typeof data.cpf !== 'string'
+          ? data.cpf.getRaw()
+          : courier.cpf.getRaw()
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { cpf: finalCpf },
+      include: { roles: true },
     })
 
-    return courier
+    if (existingUser) {
+      const alreadyHasCourierRole = existingUser.roles.some(
+        (role) => role.role === 'COURIER',
+      )
+
+      if (!alreadyHasCourierRole) {
+        await this.prisma.user.update({
+          where: { cpf: finalCpf },
+          data: {
+            roles: {
+              create: { role: 'COURIER' },
+            },
+          },
+        })
+      }
+
+      const updatedUser = await this.prisma.user.findUnique({
+        where: { cpf: finalCpf },
+        include: { roles: true },
+      })
+
+      if (!updatedUser) {
+        throw new Error(`User with CPF ${finalCpf} not found after update`)
+      }
+
+      return PrismaCourierMapper.toDomain(updatedUser)
+    } else {
+      await this.prisma.user.create({
+        data: PrismaCourierMapper.toPrisma(courier),
+      })
+      return courier
+    }
   }
 }

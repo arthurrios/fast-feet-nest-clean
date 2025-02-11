@@ -38,10 +38,49 @@ export class RecipientFactory {
   ): Promise<Recipient> {
     const recipient = makeRecipient(data)
 
-    await this.prisma.user.create({
-      data: PrismaRecipientMapper.toPrisma(recipient),
+    const finalCpf =
+      data.cpf && typeof data.cpf === 'string'
+        ? data.cpf
+        : data.cpf && typeof data.cpf !== 'string'
+          ? data.cpf.getRaw()
+          : recipient.cpf.getRaw()
+
+    const existingUser = await this.prisma.user.findUnique({
+      where: { cpf: finalCpf },
+      include: { roles: true },
     })
 
-    return recipient
+    if (existingUser) {
+      const alreadyHasRecipientRole = existingUser.roles.some(
+        (role) => role.role === 'RECIPIENT',
+      )
+
+      if (!alreadyHasRecipientRole) {
+        await this.prisma.user.update({
+          where: { cpf: finalCpf },
+          data: {
+            roles: {
+              create: { role: 'RECIPIENT' },
+            },
+          },
+        })
+      }
+
+      const updatedUser = await this.prisma.user.findUnique({
+        where: { cpf: finalCpf },
+        include: { roles: true },
+      })
+
+      if (!updatedUser) {
+        throw new Error(`User with CPF ${finalCpf} not found after update`)
+      }
+
+      return PrismaRecipientMapper.toDomain(updatedUser)
+    } else {
+      await this.prisma.user.create({
+        data: PrismaRecipientMapper.toPrisma(recipient),
+      })
+      return recipient
+    }
   }
 }
