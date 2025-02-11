@@ -39,7 +39,7 @@ export class FetchUserDeliveriesUseCase {
       {
         page,
       },
-    )    
+    )
 
     return right({ deliveries })
   }

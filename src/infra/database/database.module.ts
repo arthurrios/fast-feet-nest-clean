@@ -12,6 +12,8 @@ import { PrismaUsersRepository } from './prisma/repositories/prisma-users-reposi
 import { PrismaRecipientsRepository } from './prisma/repositories/prisma-recipients-repository'
 import { UserDeliveriesRepository } from '@/domain/user/application/repositories/user-deliveries-repository'
 import { PrismaUserDeliveriesRepository } from './prisma/repositories/prisma-user-deliveries-repository'
+import { OrderAttachmentsRepository } from '@/domain/delivery/application/repository/order-attachments-repository'
+import { AttachmentsRepository } from '@/domain/delivery/application/repository/attachments-repository'
 
 @Module({
   providers: [
@@ -36,8 +38,14 @@ import { PrismaUserDeliveriesRepository } from './prisma/repositories/prisma-use
       provide: UserDeliveriesRepository,
       useClass: PrismaUserDeliveriesRepository,
     },
-    PrismaOrderAttachmentsRepository,
-    PrismaAttachmentsRepository,
+    {
+      provide: OrderAttachmentsRepository,
+      useClass: PrismaOrderAttachmentsRepository,
+    },
+    {
+      provide: AttachmentsRepository,
+      useClass: PrismaAttachmentsRepository,
+    }
   ],
   exports: [
     PrismaService,
@@ -46,8 +54,8 @@ import { PrismaUserDeliveriesRepository } from './prisma/repositories/prisma-use
     RecipientsRepository,
     UsersRepository,
     UserDeliveriesRepository,
-    PrismaOrderAttachmentsRepository,
-    PrismaAttachmentsRepository,
+    OrderAttachmentsRepository,
+    AttachmentsRepository,
   ],
 })
 export class DatabaseModule {}
