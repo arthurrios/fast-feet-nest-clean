@@ -8,11 +8,13 @@ import { InMemoryOrdersRepository } from 'test/repositories/in-memory-orders-rep
 import { CreateOrderUseCase } from './create-order'
 import { makeRecipient } from 'test/factories/make-recipient'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let authorizationService: AuthorizationService
 let inMemoryCouriersRepository: InMemoryCouriersRepository
 let inMemoryRecipientsRepository: InMemoryRecipientsRepository
 let inMemoryOrdersRepository: InMemoryOrdersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sut: CreateOrderUseCase
 
 describe('Create order', () => {
@@ -21,7 +23,11 @@ describe('Create order', () => {
     authorizationService = authorizationServiceMock('admin-id-123')
     inMemoryCouriersRepository = new InMemoryCouriersRepository()
     inMemoryRecipientsRepository = new InMemoryRecipientsRepository()
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
 
     sut = new CreateOrderUseCase(
       authorizationService,

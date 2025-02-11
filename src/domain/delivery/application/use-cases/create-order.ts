@@ -8,7 +8,6 @@ import { OrdersRepository } from '../repository/orders-repository'
 import { AuthorizationService } from '@/core/services/authorization-service'
 import { Coordinate } from 'test/utils/get-distance-between-coordinates'
 import { Role } from '@/domain/user/@types/role'
-import { OrderAttachmentList } from '../../enterprise/entities/order-attachment-list'
 import { Injectable } from '@nestjs/common'
 
 interface CreateOrderUseCaseRequest {
@@ -71,7 +70,6 @@ export class CreateOrderUseCase {
       title,
       description,
       coordinate,
-      attachments: new OrderAttachmentList(),
       createdAt: new Date(),
     })
 

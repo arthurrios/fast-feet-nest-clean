@@ -9,14 +9,20 @@ import { generateValidCpf } from 'test/factories/faker-utils/generate-valid-cpf'
 import { makeUser } from 'test/factories/make-user'
 import { waitFor } from 'test/utils/wait-for'
 import { Role } from '../../@types/role'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemoryUserDeliveriesRepositories: InMemoryUserDeliveriesRepository
 
 describe('On Order Created', () => {
   beforeEach(() => {
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     inMemoryUsersRepository = new InMemoryUsersRepository()
     inMemoryUserDeliveriesRepositories = new InMemoryUserDeliveriesRepository()
 
@@ -38,10 +44,10 @@ describe('On Order Created', () => {
 
     inMemoryOrdersRepository.create(order)
 
-    expect(inMemoryUsersRepository.findById).toHaveBeenCalledWith(
-      order.recipientId.toString(),
-    )
     await waitFor(() => {
+      expect(inMemoryUsersRepository.findById).toHaveBeenCalledWith(
+        order.recipientId.toString(),
+      )
       expect(
         inMemoryUserDeliveriesRepositories.createOrUpdate,
       ).toHaveBeenCalledWith({

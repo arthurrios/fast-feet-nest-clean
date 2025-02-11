@@ -12,11 +12,13 @@ let inMemoryOrdersRepository: InMemoryOrdersRepository
 let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sut: UpdateOrderStatusUseCase
 
-describe('Update Order', () => {
+describe('Update Order Status', () => {
   beforeEach(() => {
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
     inMemoryOrderAttachmentsRepository =
       new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     sut = new UpdateOrderStatusUseCase(
       inMemoryOrdersRepository,
       inMemoryOrderAttachmentsRepository,

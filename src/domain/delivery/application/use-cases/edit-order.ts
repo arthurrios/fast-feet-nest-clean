@@ -6,6 +6,9 @@ import { OrdersRepository } from '../repository/orders-repository'
 import { AuthorizationService } from '@/core/services/authorization-service'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Role } from '@/domain/user/@types/role'
+import { OrderAttachmentsRepository } from '../repository/order-attachments-repository'
+import { OrderAttachmentList } from '../../enterprise/entities/order-attachment-list'
+import { OrderAttachment } from '../../enterprise/entities/order-attachment'
 
 interface EditOrderUseCaseRequest {
   requesterId: string
@@ -13,6 +16,7 @@ interface EditOrderUseCaseRequest {
   title: string
   description: string
   coordinate: Coordinate
+  attachmentsIds: string[]
 }
 
 type EditOrderUseCaseResponse = Either<
@@ -24,6 +28,7 @@ export class EditOrderUseCase {
   constructor(
     private authorizationService: AuthorizationService,
     private ordersRepository: OrdersRepository,
+    private orderAttachmentsRepository: OrderAttachmentsRepository,
   ) {}
 
   async execute({
@@ -32,6 +37,7 @@ export class EditOrderUseCase {
     title,
     description,
     coordinate,
+    attachmentsIds,
   }: EditOrderUseCaseRequest): Promise<EditOrderUseCaseResponse> {
     const authResult = await this.authorizationService.verifyRole(
       new UniqueEntityID(requesterId),
@@ -48,6 +54,21 @@ export class EditOrderUseCase {
       return left(new ResourceNotFoundError('order'))
     }
 
+    const currentOrderAttachments =
+      await this.orderAttachmentsRepository.findManyByOrderId(orderId)
+
+    const orderAttachmentList = new OrderAttachmentList(currentOrderAttachments)
+
+    const orderAttachments = attachmentsIds.map((attachmentId) => {
+      return OrderAttachment.create({
+        attachmentId: new UniqueEntityID(attachmentId),
+        orderId: order.id,
+      })
+    })
+
+    orderAttachmentList.update(orderAttachments)
+
+    order.attachments = orderAttachmentList
     order.title = title
     order.description = description
     order.coordinate = coordinate

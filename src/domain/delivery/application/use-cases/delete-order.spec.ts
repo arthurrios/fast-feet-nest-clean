@@ -5,15 +5,21 @@ import { InMemoryOrdersRepository } from 'test/repositories/in-memory-orders-rep
 import { EditOrderUseCase } from './edit-order'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { DeleteOrderUseCase } from './delete-order'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let authorizationService: AuthorizationService
 let inMemoryOrdersRepository: InMemoryOrdersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sut: DeleteOrderUseCase
 
 describe('Delete Order', () => {
   beforeEach(() => {
     authorizationService = authorizationServiceMock('admin-id-123')
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
 
     sut = new DeleteOrderUseCase(authorizationService, inMemoryOrdersRepository)
   })

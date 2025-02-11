@@ -5,16 +5,23 @@ import { OnOrderStatusChanged } from './on-order-status-changed'
 import { makeOrder } from 'test/factories/make-order'
 import { OrderStatus } from '@/domain/delivery/@types/status'
 import { InMemoryOrdersRepository } from 'test/repositories/in-memory-orders-repository'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
+import { waitFor } from 'test/utils/wait-for'
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository
 let inMemoryNotificationsRepository: InMemoryNotificationsRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sendNotificationUseCase: SendNotificationUseCase
 
 let sendNotificationExecuteSpy: MockInstance
 
 describe('On Order Status Changed', () => {
   beforeEach(() => {
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
     sendNotificationUseCase = new SendNotificationUseCase(
       inMemoryNotificationsRepository,
@@ -34,10 +41,12 @@ describe('On Order Status Changed', () => {
 
     inMemoryOrdersRepository.save(order)
 
-    expect(sendNotificationExecuteSpy).toHaveBeenCalledWith({
-      title: 'Order status changed',
-      content: `Order #${order.id} status has changed to "${order.status}"`,
-      recipientId: order.recipientId.toString(),
+    await waitFor(() => {
+      expect(sendNotificationExecuteSpy).toHaveBeenCalledWith({
+        title: 'Order status changed',
+        content: `Order #${order.id} status has changed to "${order.status}"`,
+        recipientId: order.recipientId.toString(),
+      })
     })
   })
 })

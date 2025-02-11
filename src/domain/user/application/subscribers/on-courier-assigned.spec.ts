@@ -9,14 +9,20 @@ import { makeUser } from 'test/factories/make-user'
 import { waitFor } from 'test/utils/wait-for'
 import { Role } from '../../@types/role'
 import { OnCourierAssigned } from './on-courier-assigned'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemoryUserDeliveriesRepositories: InMemoryUserDeliveriesRepository
 
 describe('On Order Created', () => {
   beforeEach(() => {
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     inMemoryUsersRepository = new InMemoryUsersRepository()
     inMemoryUserDeliveriesRepositories = new InMemoryUserDeliveriesRepository()
 
@@ -44,10 +50,10 @@ describe('On Order Created', () => {
     order.assignCourier(user.id)
     inMemoryOrdersRepository.save(order)
 
-    expect(inMemoryUsersRepository.findById).toHaveBeenCalledWith(
-      user.id.toString(),
-    )
     await waitFor(() => {
+      expect(inMemoryUsersRepository.findById).toHaveBeenCalledWith(
+        user.id.toString(),
+      )
       expect(
         inMemoryUserDeliveriesRepositories.createOrUpdate,
       ).toHaveBeenCalledWith({
