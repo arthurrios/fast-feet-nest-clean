@@ -28,7 +28,7 @@ export class Order extends AggregateRoot<OrderProps> {
   }
 
   get recipientId() {
-    return this.props.recipientId
+    return this.props.recipientId.toString()
   }
 
   get title() {
@@ -71,6 +71,10 @@ export class Order extends AggregateRoot<OrderProps> {
     this.props.title = title
     this.props.slug = Slug.createFromText(title)
     this.touch()
+  }
+
+  set recipientId(recipientId: string) {
+    this.props.recipientId = new UniqueEntityID(recipientId)
   }
 
   set description(description: string) {

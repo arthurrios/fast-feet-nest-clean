@@ -10,6 +10,8 @@ import { GetOrderUseCase } from '@/domain/delivery/application/use-cases/get-ord
 import { GetOrdersController } from './get-orders.controller'
 import { GetOrdersUseCase } from '@/domain/delivery/application/use-cases/get-orders'
 import { GetOrderController } from './get-order.controller'
+import { EditOrderController } from './edit-order.controller'
+import { EditOrderUseCase } from '@/domain/delivery/application/use-cases/edit-order'
 
 @Module({
   imports: [UserModule, DatabaseModule],
@@ -18,6 +20,7 @@ import { GetOrderController } from './get-order.controller'
     FetchOrdersNearbyController,
     GetOrdersController,
     GetOrderController,
+    EditOrderController,
   ],
   providers: [
     AuthorizationService,
@@ -25,12 +28,14 @@ import { GetOrderController } from './get-order.controller'
     FetchOrdersNearbyUseCase,
     GetOrdersUseCase,
     GetOrderUseCase,
+    EditOrderUseCase,
   ],
   exports: [
     CreateOrderUseCase,
     FetchOrdersNearbyUseCase,
     GetOrdersUseCase,
     GetOrderUseCase,
+    EditOrderUseCase,
   ],
 })
 export class OrderModule {}

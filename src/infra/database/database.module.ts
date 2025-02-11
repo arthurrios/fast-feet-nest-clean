@@ -45,7 +45,7 @@ import { AttachmentsRepository } from '@/domain/delivery/application/repository/
     {
       provide: AttachmentsRepository,
       useClass: PrismaAttachmentsRepository,
-    }
+    },
   ],
   exports: [
     PrismaService,

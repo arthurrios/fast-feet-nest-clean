@@ -36,6 +36,7 @@ describe('Edit Order', () => {
     await sut.execute({
       orderId: order.id.toValue(),
       requesterId: adminId.toValue(),
+      recipientId: order.recipientId,
       title: 'Order Altered Title',
       description: order.description,
       coordinate: order.coordinate,
@@ -52,6 +53,7 @@ describe('Edit Order', () => {
     const result = await sut.execute({
       orderId: order.id.toValue(),
       requesterId: requesterId.toValue(),
+      recipientId: order.recipientId,
       title: 'Order Altered Title',
       description: order.description,
       coordinate: order.coordinate,
@@ -81,6 +83,7 @@ describe('Edit Order', () => {
     const result = await sut.execute({
       orderId: order.id.toValue(),
       requesterId: adminId.toValue(),
+      recipientId: order.recipientId,
       title: 'Order Altered Title',
       description: order.description,
       coordinate: order.coordinate,

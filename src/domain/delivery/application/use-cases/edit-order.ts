@@ -9,10 +9,12 @@ import { Role } from '@/domain/user/@types/role'
 import { OrderAttachmentsRepository } from '../repository/order-attachments-repository'
 import { OrderAttachmentList } from '../../enterprise/entities/order-attachment-list'
 import { OrderAttachment } from '../../enterprise/entities/order-attachment'
+import { Injectable } from '@nestjs/common'
 
 interface EditOrderUseCaseRequest {
   requesterId: string
   orderId: string
+  recipientId: string
   title: string
   description: string
   coordinate: Coordinate
@@ -24,6 +26,7 @@ type EditOrderUseCaseResponse = Either<
   null
 >
 
+@Injectable()
 export class EditOrderUseCase {
   constructor(
     private authorizationService: AuthorizationService,
@@ -33,6 +36,7 @@ export class EditOrderUseCase {
 
   async execute({
     requesterId,
+    recipientId,
     orderId,
     title,
     description,
@@ -72,6 +76,7 @@ export class EditOrderUseCase {
     order.title = title
     order.description = description
     order.coordinate = coordinate
+    order.recipientId = recipientId
 
     await this.ordersRepository.save(order)
 

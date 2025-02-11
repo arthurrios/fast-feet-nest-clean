@@ -14,7 +14,9 @@ import { FileInterceptor } from '@nestjs/platform-express'
 
 @Controller('/attachments')
 export class UploadAttachmentController {
-  constructor(private uploadAndCreateAttachment: UploadAndCreateAttachmentUseCase) {}
+  constructor(
+    private uploadAndCreateAttachment: UploadAndCreateAttachmentUseCase,
+  ) {}
 
   @Post()
   @UseInterceptors(FileInterceptor('file'))
@@ -48,10 +50,10 @@ export class UploadAttachmentController {
       }
     }
 
-      const { attachment } = result.value
+    const { attachment } = result.value
 
-      return {
-        attachmentId: attachment.id.toString()
-      }
+    return {
+      attachmentId: attachment.id.toString(),
+    }
   }
 }

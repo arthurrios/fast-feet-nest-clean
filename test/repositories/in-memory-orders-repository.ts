@@ -1,5 +1,6 @@
 import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
+import { OrderAttachmentsRepository } from '@/domain/delivery/application/repository/order-attachments-repository'
 import {
   FindManyNearbyParams,
   OrdersRepository,
@@ -9,6 +10,9 @@ import { getDistanceBetweenCoordinates } from 'test/utils/get-distance-between-c
 
 export class InMemoryOrdersRepository implements OrdersRepository {
   public items: Order[] = []
+
+  constructor(private orderAttachmentsRepository: OrderAttachmentsRepository) {}
+
   async findById(id: string): Promise<Order | null> {
     const order = this.items.find((item) => item.id.toString() === id)
 
@@ -65,6 +69,10 @@ export class InMemoryOrdersRepository implements OrdersRepository {
   async create(order: Order): Promise<void> {
     this.items.push(order)
 
+    await this.orderAttachmentsRepository.createMany(
+      order.attachments.getItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(order.id)
   }
 
@@ -72,6 +80,14 @@ export class InMemoryOrdersRepository implements OrdersRepository {
     const index = this.items.findIndex((item) => item.id.equals(order.id))
 
     this.items[index] = order
+
+    await this.orderAttachmentsRepository.createMany(
+      order.attachments.getNewItems(),
+    )
+
+    await this.orderAttachmentsRepository.deleteMany(
+      order.attachments.getRemovedItems(),
+    )
 
     DomainEvents.dispatchEventsForAggregate(order.id)
   }

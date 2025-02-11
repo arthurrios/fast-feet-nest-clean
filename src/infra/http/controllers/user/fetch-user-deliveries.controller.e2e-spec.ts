@@ -58,8 +58,6 @@ describe('Fetch user deliveries (E2E)', () => {
       .get(`/users/${recipient.id}/deliveries`)
       .set('Authorization', `Bearer ${accessToken}`)
 
-    console.log(response.body)
-
     expect(response.statusCode).toBe(200)
     expect(response.body.deliveries).toHaveLength(2)
     expect(response.body).toEqual({
