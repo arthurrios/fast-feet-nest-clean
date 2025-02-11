@@ -12,6 +12,8 @@ import { GetOrdersUseCase } from '@/domain/delivery/application/use-cases/get-or
 import { GetOrderController } from './get-order.controller'
 import { EditOrderController } from './edit-order.controller'
 import { EditOrderUseCase } from '@/domain/delivery/application/use-cases/edit-order'
+import { DeleteOrderController } from './delete-order.controller'
+import { DeleteOrderUseCase } from '@/domain/delivery/application/use-cases/delete-order'
 
 @Module({
   imports: [UserModule, DatabaseModule],
@@ -21,6 +23,7 @@ import { EditOrderUseCase } from '@/domain/delivery/application/use-cases/edit-o
     GetOrdersController,
     GetOrderController,
     EditOrderController,
+    DeleteOrderController,
   ],
   providers: [
     AuthorizationService,
@@ -29,6 +32,7 @@ import { EditOrderUseCase } from '@/domain/delivery/application/use-cases/edit-o
     GetOrdersUseCase,
     GetOrderUseCase,
     EditOrderUseCase,
+    DeleteOrderUseCase,
   ],
   exports: [
     CreateOrderUseCase,
@@ -36,6 +40,7 @@ import { EditOrderUseCase } from '@/domain/delivery/application/use-cases/edit-o
     GetOrdersUseCase,
     GetOrderUseCase,
     EditOrderUseCase,
+    DeleteOrderUseCase,
   ],
 })
 export class OrderModule {}

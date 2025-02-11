@@ -5,6 +5,7 @@ import { Either, left, right } from '@/core/either'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { OrdersRepository } from '../repository/orders-repository'
 import { Role } from '@/domain/user/@types/role'
+import { Injectable } from '@nestjs/common'
 
 interface DeleteOrderUseCaseRequest {
   requesterId: string
@@ -16,6 +17,7 @@ type DeleteOrderUseCaseResponse = Either<
   null
 >
 
+@Injectable()
 export class DeleteOrderUseCase {
   constructor(
     private authorizationService: AuthorizationService,
