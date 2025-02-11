@@ -12,7 +12,7 @@ import { OrderFactory } from 'test/factories/make-order'
 import { RecipientFactory } from 'test/factories/make-recipient'
 import { UserFactory } from 'test/factories/make-user'
 
-describe('Edit order (E2E)', () => {
+describe('Update order status (E2E)', () => {
   let app: INestApplication
   let userFactory: UserFactory
   let prisma: PrismaService
@@ -46,7 +46,7 @@ describe('Edit order (E2E)', () => {
     await app.init()
   })
 
-  test('[PUT] /orders/:orderId', async () => {
+  test('[PUT] /orders/:orderId/status', async () => {
     const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
@@ -64,18 +64,12 @@ describe('Edit order (E2E)', () => {
     })
 
     const response = await request(app.getHttpServer())
-      .put(`/orders/${order.id}`)
+      .put(`/orders/${order.id}/status`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        title: order.title,
-        description: order.description,
-        recipientId: recipient.id.toString(),
-        coordinate: {
-          latitude: order.coordinate.latitude,
-          longitude: order.coordinate.longitude,
-        },
+        status: 'DELIVERED',
         courierId: courier.id.toString(),
-        attachments: [attachment1.id.toString(), attachment2.id.toString()],
+        attachmentsIds: [attachment1.id.toString(), attachment2.id.toString()],
       })
 
     expect(response.statusCode).toBe(204)

@@ -43,6 +43,8 @@ export class PrismaOrderAttachmentsRepository
       where: { orderId },
     })
 
+    console.log(orderAttachments)
+
     return orderAttachments.map(PrismaOrderAttachmentMapper.toDomain)
   }
 

@@ -8,6 +8,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { OrderAttachment } from '../../enterprise/entities/order-attachment'
 import { OrderAttachmentList } from '../../enterprise/entities/order-attachment-list'
 import { OrderAttachmentsRepository } from '../repository/order-attachments-repository'
+import { Injectable } from '@nestjs/common'
 
 interface UpdateOrderStatusUseCaseRequest {
   courierId?: string
@@ -21,6 +22,7 @@ type UpdateOrderStatusUseCaseResponse = Either<
   { order: Order }
 >
 
+@Injectable()
 export class UpdateOrderStatusUseCase {
   constructor(
     private ordersRepository: OrdersRepository,
@@ -65,6 +67,8 @@ export class UpdateOrderStatusUseCase {
       })
 
       order.attachments = new OrderAttachmentList(orderAttachments)
+
+      await this.orderAttachmentsRepository.createMany(orderAttachments)
 
       const attachments =
         await this.orderAttachmentsRepository.findManyByOrderId(

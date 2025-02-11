@@ -6,13 +6,11 @@ import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
-import { AttachmentFactory } from 'test/factories/make-attachment'
-import { CourierFactory } from 'test/factories/make-courier'
-import { makeOrder, OrderFactory } from 'test/factories/make-order'
+import { OrderFactory } from 'test/factories/make-order'
 import { RecipientFactory } from 'test/factories/make-recipient'
 import { UserFactory } from 'test/factories/make-user'
 
-describe('Edit order (E2E)', () => {
+describe('Delete order (E2E)', () => {
   let app: INestApplication
   let userFactory: UserFactory
   let prisma: PrismaService
@@ -36,7 +34,7 @@ describe('Edit order (E2E)', () => {
     await app.init()
   })
 
-  test('[PUT] /orders', async () => {
+  test('[DELETE] /orders', async () => {
     const user = await userFactory.makePrismaUser({ roles: [Role.ADMIN] })
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
