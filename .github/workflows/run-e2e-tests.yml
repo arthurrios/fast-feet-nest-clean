@@ -13,9 +13,18 @@ jobs:
         ports:
           - 5432:5432
         env:
-          POSTGRESQL_USERNAME: docker
+          POSTGRESQL_USERNAME: postgres
           POSTGRESQL_PASSWORD: docker
-          POSTGRESQL_DATABASE: apisolid
+          POSTGRESQL_DATABASE: fast-feet-nest-clean
+
+
+      redis:
+        image: bitnami/redis
+        ports:
+          - 6379:6379
+        env:
+          ALLOW_EMPTY_PASSWORD: "yes"
+          
 
     steps:
       - uses: actions/checkout@v3
@@ -35,5 +44,13 @@ jobs:
 
       - run: pnpm run test:e2e
         env: 
-          JWT_SECRET: testing
-          DATABASE_URL: "postgresql://docker:docker@localhost:5432/apisolid?schema=public"
+          JWT_PRIVATE_KEY: ${{ secrets.JWT_PRIVATE_KEY }}
+          JWT_PUBLIC_KEY: ${{ secrets.JWT_PUBLIC_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_HOST: "localhost"
+          REDIS_PORT: "6379"
+          REDIS_DB: ${{ vars.REDIS_PORT }}
