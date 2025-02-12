@@ -6,6 +6,7 @@ import { OrderAttachmentList } from '@/domain/delivery/enterprise/entities/order
 import { Injectable } from '@nestjs/common'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaOrderMapper } from '@/infra/database/prisma/mappers/prisma-order-mapper'
+import { DomainEvents } from '@/core/events/domain-events'
 
 export function makeOrder(override: Partial<OrderProps>, id?: UniqueEntityID) {
   const title = faker.lorem.sentence()
@@ -40,6 +41,8 @@ export class OrderFactory {
     await this.prisma.order.create({
       data: PrismaOrderMapper.toPrisma(order),
     })
+
+    DomainEvents.dispatchEventsForAggregate(order.id)
 
     return order
   }

@@ -4,6 +4,7 @@ import { RecipientsRepository } from '@/domain/delivery/application/repository/r
 import { Recipient } from '@/domain/delivery/enterprise/entities/recipient'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { PrismaRecipientMapper } from '../mappers/prisma-recipient-mapper'
+import { DomainEvents } from '@/core/events/domain-events'
 
 @Injectable()
 export class PrismaRecipientsRepository implements RecipientsRepository {
@@ -53,6 +54,8 @@ export class PrismaRecipientsRepository implements RecipientsRepository {
     await this.prisma.user.create({
       data,
     })
+
+    DomainEvents.dispatchEventsForAggregate(recipient.id)
   }
 
   async save(recipient: Recipient): Promise<void> {
@@ -64,11 +67,11 @@ export class PrismaRecipientsRepository implements RecipientsRepository {
       },
       data,
     })
+
+    DomainEvents.dispatchEventsForAggregate(recipient.id)
   }
 
   async delete(recipient: Recipient): Promise<void> {
-    const data = PrismaRecipientMapper.toPrisma(recipient)
-
     await this.prisma.user.delete({
       where: {
         id: recipient.id.toString(),

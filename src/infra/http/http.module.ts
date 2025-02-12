@@ -6,6 +6,7 @@ import { OrderModule } from './controllers/order/order.module'
 import { CourierModule } from './controllers/courier/courier.module'
 import { RecipientModule } from './controllers/recipient/recipient.module'
 import { AttachmentModule } from './controllers/attachment/attachment.module'
+import { NotificationModule } from './controllers/notification/notification.module'
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AttachmentModule } from './controllers/attachment/attachment.module'
     RecipientModule,
     CryptographyModule,
     AttachmentModule,
+    NotificationModule,
   ],
   providers: [],
 })

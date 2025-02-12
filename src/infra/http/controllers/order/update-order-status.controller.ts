@@ -21,7 +21,7 @@ const orderIdValidationPipe = new ZodValidationPipe(orderIdParamSchema)
 const updateOrderStatusBodySchema = z.object({
   courierId: z.string().uuid().optional(),
   status: z.nativeEnum(OrderStatus),
-  attachmentsIds: z.array(z.string().uuid()),
+  attachmentsIds: z.array(z.string().uuid()).optional(),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(updateOrderStatusBodySchema)
@@ -44,8 +44,9 @@ export class UpdateOrderStatusController {
       courierId,
       status,
       orderId,
-      attachmentsIds,
+      attachmentsIds: attachmentsIds ?? [],
     })
+    
 
     if (result.isLeft()) {
       const error = result.value

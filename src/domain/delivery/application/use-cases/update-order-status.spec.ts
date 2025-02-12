@@ -119,7 +119,7 @@ describe('Update Order Status', () => {
       courierId: '1',
       orderId: order.id.toString(),
       status: OrderStatus.DELIVERED,
-      attachmentsIds: ['1'],
+      attachmentsIds: [],
     })
 
     expect(result.isLeft()).toBe(true)
@@ -148,7 +148,7 @@ describe('Update Order Status', () => {
       courierId: '1',
       orderId: order.id.toString(),
       status: OrderStatus.DELIVERED,
-      attachmentsIds: ['1', '2'],
+      attachmentsIds: [],
     })
 
     expect(result.isRight()).toBe(true)

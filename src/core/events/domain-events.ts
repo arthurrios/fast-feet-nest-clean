@@ -52,10 +52,6 @@ export class DomainEvents {
   public static dispatchEventsForAggregate(id: UniqueEntityID) {
     const aggregate = this.findMarkedAggregateByID(id)
 
-    if (!this.shouldRun) {
-      return
-    }
-
     if (aggregate) {
       this.dispatchAggregateEvents(aggregate)
       aggregate.clearEvents()
@@ -87,16 +83,18 @@ export class DomainEvents {
   }
 
   private static dispatch(event: DomainEvent) {
-    const eventClassName: string = event.constructor.name
-
-    const isEventRegistered = eventClassName in this.handlersMap
-
+    const eventClassName: string = event.constructor.name;
+  
+    const isEventRegistered = eventClassName in this.handlersMap;
+  
     if (isEventRegistered) {
-      const handlers = this.handlersMap[eventClassName]
-
+      const handlers = this.handlersMap[eventClassName];
+      console.log(`[Domain Event]: ${eventClassName}`);
       for (const handler of handlers) {
-        handler(event)
+        handler(event);
       }
+    } else {
+      console.warn(`Nenhum handler registrado para ${eventClassName}`);
     }
   }
 }

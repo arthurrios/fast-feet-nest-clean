@@ -4,6 +4,7 @@ import { CouriersRepository } from '@/domain/delivery/application/repository/cou
 import { Courier } from '@/domain/delivery/enterprise/entities/courier'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { PrismaCourierMapper } from '../mappers/prisma-courier-mapper'
+import { DomainEvents } from '@/core/events/domain-events'
 
 @Injectable()
 export class PrismaCouriersRepository implements CouriersRepository {
@@ -53,6 +54,8 @@ export class PrismaCouriersRepository implements CouriersRepository {
     await this.prisma.user.create({
       data,
     })
+
+    DomainEvents.dispatchEventsForAggregate(courier.id)
   }
 
   async save(courier: Courier): Promise<void> {
@@ -64,11 +67,11 @@ export class PrismaCouriersRepository implements CouriersRepository {
       },
       data,
     })
+
+    DomainEvents.dispatchEventsForAggregate(courier.id)
   }
 
   async delete(courier: Courier): Promise<void> {
-    const data = PrismaCourierMapper.toPrisma(courier)
-
     await this.prisma.user.delete({
       where: {
         id: courier.id.toString(),
