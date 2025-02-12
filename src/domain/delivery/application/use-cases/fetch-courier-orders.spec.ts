@@ -6,13 +6,19 @@ import { Order } from '../../enterprise/entities/order'
 import { OrderStatus } from '../../@types/status'
 import { InMemoryCouriersRepository } from 'test/repositories/in-memory-couriers-repository'
 import { makeOrder } from 'test/factories/make-order'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository
 let inMemoryCouriersRepository: InMemoryCouriersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sut: FetchCourierOrdersUseCase
 describe('Fetch Courier Orders', () => {
   beforeEach(() => {
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     inMemoryCouriersRepository = new InMemoryCouriersRepository()
 
     sut = new FetchCourierOrdersUseCase(inMemoryOrdersRepository)

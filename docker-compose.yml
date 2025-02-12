@@ -11,3 +11,13 @@ services:
       PG_DATA: /data/postgres
     volumes:
       - ./data/pg:/data/postgres
+
+  cache:
+    container_name: fast-feet-nest-clean-redis
+    image: bitnami/redis:latest
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data/redis

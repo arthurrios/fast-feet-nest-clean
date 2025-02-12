@@ -20,8 +20,10 @@ import { USER_LINKED_ENTITY_REPOSITORIES } from '../../domain/delivery/applicati
 import { UserLinkedEntity } from '@/core/shared/entities/user-linked-entity'
 import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications-repository'
 import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository'
+import { CacheModule } from '../cache/redis/cache.module'
 
 @Module({
+  imports: [CacheModule],
   providers: [
     PrismaService,
     {

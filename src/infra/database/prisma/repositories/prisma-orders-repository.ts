@@ -10,15 +10,24 @@ import { PrismaOrderMapper } from '../mappers/prisma-order-mapper'
 import { RawOrder } from '../dtos/raw-order'
 import { OrderAttachmentsRepository } from '@/domain/delivery/application/repository/order-attachments-repository'
 import { DomainEvents } from '@/core/events/domain-events'
+import { CacheRepository } from '@/infra/cache/cache-repository'
 
 @Injectable()
 export class PrismaOrdersRepository implements OrdersRepository {
   constructor(
     private prisma: PrismaService,
     private orderAttachmentsRepository: OrderAttachmentsRepository,
+    private cacheRepository: CacheRepository,
   ) {}
 
   async findById(id: string): Promise<Order | null> {
+    const cacheHit = await this.cacheRepository.get(`order:${id}:details`)
+
+    if (cacheHit) {
+      const cachedData = JSON.parse(cacheHit)
+      return PrismaOrderMapper.toDomain(cachedData)
+    }
+
     const order = await this.prisma.order.findUnique({
       where: { id },
     })
@@ -27,7 +36,15 @@ export class PrismaOrdersRepository implements OrdersRepository {
       return null
     }
 
-    return PrismaOrderMapper.toDomain(order)
+    await this.cacheRepository.set(
+      `order:${id}:details`,
+      JSON.stringify(order),
+    )
+
+    const orderDetails = PrismaOrderMapper.toDomain(order)
+
+
+    return orderDetails
   }
 
   async findManyByCourierId(
@@ -98,7 +115,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
   async save(order: Order): Promise<void> {
     const data = PrismaOrderMapper.toPrisma(order)
 
-    if (order.attachments.currentItems.length !== 0) {      
+    if (order.attachments.currentItems.length !== 0) {
       await Promise.all([
         await this.orderAttachmentsRepository.createMany(
           order.attachments.getNewItems(),
@@ -113,7 +130,7 @@ export class PrismaOrdersRepository implements OrdersRepository {
           data,
         }),
       ])
-    } else {      
+    } else {
       await this.orderAttachmentsRepository.createMany(
         order.attachments.getItems(),
       )
@@ -124,6 +141,8 @@ export class PrismaOrdersRepository implements OrdersRepository {
         data,
       })
     }
+
+    this.cacheRepository.delete(`order:${order.id}:details`)
 
     DomainEvents.dispatchEventsForAggregate(order.id)
   }

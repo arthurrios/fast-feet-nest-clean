@@ -83,18 +83,18 @@ export class DomainEvents {
   }
 
   private static dispatch(event: DomainEvent) {
-    const eventClassName: string = event.constructor.name;
-  
-    const isEventRegistered = eventClassName in this.handlersMap;
-  
+    const eventClassName: string = event.constructor.name
+
+    const isEventRegistered = eventClassName in this.handlersMap
+
     if (isEventRegistered) {
-      const handlers = this.handlersMap[eventClassName];
-      console.log(`[Domain Event]: ${eventClassName}`);
+      const handlers = this.handlersMap[eventClassName]
+      console.log(`[Domain Event]: ${eventClassName}`)
       for (const handler of handlers) {
-        handler(event);
+        handler(event)
       }
     } else {
-      console.warn(`Nenhum handler registrado para ${eventClassName}`);
+      console.warn(`Nenhum handler registrado para ${eventClassName}`)
     }
   }
 }

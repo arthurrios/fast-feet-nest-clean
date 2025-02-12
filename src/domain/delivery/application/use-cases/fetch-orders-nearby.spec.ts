@@ -5,13 +5,19 @@ import { Order } from '../../enterprise/entities/order'
 import { makeCourier } from 'test/factories/make-courier'
 import { makeOrder } from 'test/factories/make-order'
 import { FetchOrdersNearbyUseCase } from './fetch-orders-nearby'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let inMemoryOrdersRepository: InMemoryOrdersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sut: FetchOrdersNearbyUseCase
 
 describe('Fetch Orders Nearby', () => {
   beforeEach(() => {
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     sut = new FetchOrdersNearbyUseCase(inMemoryOrdersRepository)
   })
 

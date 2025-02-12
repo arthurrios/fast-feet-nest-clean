@@ -46,7 +46,6 @@ export class UpdateOrderStatusController {
       orderId,
       attachmentsIds: attachmentsIds ?? [],
     })
-    
 
     if (result.isLeft()) {
       const error = result.value

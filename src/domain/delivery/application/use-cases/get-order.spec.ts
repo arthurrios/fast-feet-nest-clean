@@ -4,15 +4,20 @@ import { authorizationServiceMock } from 'test/factories/mocks/authorization-ser
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { makeOrder } from 'test/factories/make-order'
 import { GetOrderUseCase } from './get-order'
+import { InMemoryOrderAttachmentsRepository } from 'test/repositories/in-memory-order-attachments-repository'
 
 let authorizationService: AuthorizationService
 let inMemoryOrdersRepository: InMemoryOrdersRepository
+let inMemoryOrderAttachmentsRepository: InMemoryOrderAttachmentsRepository
 let sut: GetOrderUseCase
 describe('Get Order', () => {
   beforeEach(() => {
     authorizationService = authorizationServiceMock('admin-id-123')
-    inMemoryOrdersRepository = new InMemoryOrdersRepository()
-
+    inMemoryOrderAttachmentsRepository =
+      new InMemoryOrderAttachmentsRepository()
+    inMemoryOrdersRepository = new InMemoryOrdersRepository(
+      inMemoryOrderAttachmentsRepository,
+    )
     sut = new GetOrderUseCase(authorizationService, inMemoryOrdersRepository)
   })
   it('should be able to get order succesfully', async () => {

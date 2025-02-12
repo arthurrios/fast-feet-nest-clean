@@ -7,7 +7,7 @@ import { Injectable } from '@nestjs/common'
 @Injectable()
 export class OnOrderStatusChanged implements EventHandler {
   constructor(private sendNotification: SendNotificationUseCase) {
-    console.log('OnOrderStatusChanged instanciado');
+    console.log('OnOrderStatusChanged instanciado')
     this.setupSubscriptions()
   }
 
@@ -16,13 +16,13 @@ export class OnOrderStatusChanged implements EventHandler {
       this.sendOrderStatusChangedNotification.bind(this),
       OrderStatusChangedEvent.name,
     )
-    console.log(`Inscrito no evento ${OrderStatusChangedEvent.name}`);
+    console.log(`Inscrito no evento ${OrderStatusChangedEvent.name}`)
   }
 
   private async sendOrderStatusChangedNotification({
     order,
-  }: OrderStatusChangedEvent) {    
-    console.log(`Evento recebido para order ${order.id}`);
+  }: OrderStatusChangedEvent) {
+    console.log(`Evento recebido para order ${order.id}`)
     await this.sendNotification.execute({
       title: 'Order status changed',
       content: `Order #${order.id.toString()} status has changed to "${order.status}"`,

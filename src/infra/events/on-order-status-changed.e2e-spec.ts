@@ -42,7 +42,7 @@ describe('On order status changed (E2E)', () => {
 
     const order = await orderFactory.makePrismaOrder({
       recipientId: user.id,
-    })    
+    })
 
     const orderId = order.id.toString()
 
@@ -52,8 +52,8 @@ describe('On order status changed (E2E)', () => {
       .send({
         status: 'PICKED_UP',
         courierId: courier.id.toString(),
-      })    
-  
+      })
+
     await waitFor(async () => {
       const notificationOnDatabase = await prisma.notification.findFirst({
         where: {
