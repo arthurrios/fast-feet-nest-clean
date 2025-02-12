@@ -36,9 +36,10 @@ model User {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  orders     Order[]    @relation("recipient")
-  assignedTo Order[]    @relation("courier")
-  roles      UserRole[]
+  orders        Order[]        @relation("recipient")
+  assignedTo    Order[]        @relation("courier")
+  roles         UserRole[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -85,4 +86,17 @@ model Attachment {
   order Order? @relation(fields: [orderId], references: [id])
 
   @@map("attachments")
+}
+
+model Notification {
+  id          String    @id @default(uuid())
+  recipientId String    @map("recipient_id")
+  title       String
+  content     String
+  readAt      DateTime? @map("read_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  recipient User @relation(fields: [recipientId], references: [id])
+
+  @@map("notifications")
 }

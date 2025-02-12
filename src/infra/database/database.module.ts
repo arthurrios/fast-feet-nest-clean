@@ -14,6 +14,12 @@ import { UserDeliveriesRepository } from '@/domain/user/application/repositories
 import { PrismaUserDeliveriesRepository } from './prisma/repositories/prisma-user-deliveries-repository'
 import { OrderAttachmentsRepository } from '@/domain/delivery/application/repository/order-attachments-repository'
 import { AttachmentsRepository } from '@/domain/delivery/application/repository/attachments-repository'
+import { UserLinkedEntityRepository } from '@/core/types/repositories/user-linked-entity-repository'
+import { PrismaUserLinkedEntityRepository } from './prisma/repositories/prisma-user-linked-entity-repository'
+import { USER_LINKED_ENTITY_REPOSITORIES } from '../../domain/delivery/application/repository/repositories.tokens'
+import { UserLinkedEntity } from '@/core/shared/entities/user-linked-entity'
+import { NotificationsRepository } from '@/domain/notification/application/repositories/notifications-repository'
+import { PrismaNotificationsRepository } from './prisma/repositories/prisma-notifications-repository'
 
 @Module({
   providers: [
@@ -46,6 +52,23 @@ import { AttachmentsRepository } from '@/domain/delivery/application/repository/
       provide: AttachmentsRepository,
       useClass: PrismaAttachmentsRepository,
     },
+    {
+      provide: UserLinkedEntityRepository,
+      useClass: PrismaUserLinkedEntityRepository,
+    },
+    {
+      provide: USER_LINKED_ENTITY_REPOSITORIES,
+      useFactory: (
+        repository: UserLinkedEntityRepository<UserLinkedEntity>,
+      ) => {
+        return [repository]
+      },
+      inject: [UserLinkedEntityRepository],
+    },
+    {
+      provide: NotificationsRepository,
+      useClass: PrismaNotificationsRepository,
+    },
   ],
   exports: [
     PrismaService,
@@ -56,6 +79,9 @@ import { AttachmentsRepository } from '@/domain/delivery/application/repository/
     UserDeliveriesRepository,
     OrderAttachmentsRepository,
     AttachmentsRepository,
+    UserLinkedEntityRepository,
+    USER_LINKED_ENTITY_REPOSITORIES,
+    NotificationsRepository,
   ],
 })
 export class DatabaseModule {}

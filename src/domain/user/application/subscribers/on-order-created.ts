@@ -4,7 +4,9 @@ import { Role } from '../../@types/role'
 import { UsersRepository } from '../repositories/users-repository'
 import { OrderCreatedEvent } from '@/domain/delivery/enterprise/events/order-created-event'
 import { UserDeliveriesRepository } from '../repositories/user-deliveries-repository'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class OnOrderCreated implements EventHandler {
   constructor(
     private usersRepository: UsersRepository,

@@ -4,7 +4,9 @@ import { CourierAssignedEvent } from '@/domain/delivery/enterprise/events/courie
 import { Role } from '../../@types/role'
 import { UserDeliveriesRepository } from '../repositories/user-deliveries-repository'
 import { DomainEvents } from '@/core/events/domain-events'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class OnCourierAssigned implements EventHandler {
   constructor(
     private usersRepository: UsersRepository,

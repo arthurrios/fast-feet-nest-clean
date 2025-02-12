@@ -2,7 +2,6 @@ import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 import { RecipientsRepository } from '@/domain/delivery/application/repository/recipient-repository'
 import { Recipient } from '@/domain/delivery/enterprise/entities/recipient'
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
 
 export class InMemoryRecipientsRepository implements RecipientsRepository {
   public items: Recipient[] = []

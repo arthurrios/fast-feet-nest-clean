@@ -3,7 +3,9 @@ import { EventHandler } from '@/core/events/event-handler'
 import { CreateUserUseCase } from '../use-cases/create-user'
 import { CourierRegisteredEvent } from '@/domain/delivery/enterprise/events/courier-registered-event'
 import { Role } from '../../@types/role'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class OnCourierCreated implements EventHandler {
   constructor(private createUserUseCase: CreateUserUseCase) {
     this.setupSubscriptions()
