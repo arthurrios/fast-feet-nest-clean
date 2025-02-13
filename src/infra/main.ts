@@ -9,7 +9,7 @@ async function bootstrap() {
   const configService = app.get(EnvService)
   const port = configService.get('PORT')
 
-  console.log(`🚀 Server ready at http://localhost:${port}/graphql`);
+  console.log(`🚀 Server ready at http://localhost:${port}/graphql`)
   await app.listen(port, '0.0.0.0')
 }
 bootstrap()
