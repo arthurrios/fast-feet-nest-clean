@@ -51,6 +51,7 @@ jobs:
           AWS_BUCKET_NAME: ${{ vars.AWS_BUCKET_NAME }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
           REDIS_HOST: "localhost"
           REDIS_PORT: "6379"
           REDIS_DB: ${{ vars.REDIS_PORT }}

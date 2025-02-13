@@ -1,18 +1,26 @@
 import { EnvService } from '@/infra/env/env.service'
 import { Injectable, OnModuleDestroy } from '@nestjs/common'
-import { Redis } from 'ioredis'
+import Redis from 'ioredis'
 
 @Injectable()
-export class RedisService extends Redis {
+export class RedisService implements OnModuleDestroy {
+  private client: Redis;
+
   constructor(envService: EnvService) {
-    super({
-      host: envService.get('REDIS_HOST'),
-      port: envService.get('REDIS_PORT'),
-      db: envService.get('REDIS_DB'),
-    })
+      this.client = new Redis(envService.get('REDIS_URL'), {
+      tls: {},
+    });
+
+    this.client.on('connect', () => console.log('✅ Redis connected to Upstash'));
+    this.client.on('error', (err) => console.error('❌ Redis error', err));
   }
 
-  OnModuleDestroy() {
-    return this.disconnect()
+  getClient(): Redis {
+    return this.client;
+  }
+
+  async onModuleDestroy() {
+    await this.client.quit();
+    console.log('🛑 Redis connection closed');
   }
 }
