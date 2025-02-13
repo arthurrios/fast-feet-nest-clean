@@ -36,13 +36,9 @@ export class PrismaOrdersRepository implements OrdersRepository {
       return null
     }
 
-    await this.cacheRepository.set(
-      `order:${id}:details`,
-      JSON.stringify(order),
-    )
+    await this.cacheRepository.set(`order:${id}:details`, JSON.stringify(order))
 
     const orderDetails = PrismaOrderMapper.toDomain(order)
-
 
     return orderDetails
   }

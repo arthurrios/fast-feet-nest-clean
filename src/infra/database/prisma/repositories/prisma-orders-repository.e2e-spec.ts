@@ -65,9 +65,11 @@ describe('Prisma Orders Repository (E2E)', () => {
       throw new Error('Cache not found')
     }
 
-    expect(JSON.parse(cached)).toEqual(expect.objectContaining({
-      id: orderDetails?.id.toString(),
-    }))
+    expect(JSON.parse(cached)).toEqual(
+      expect.objectContaining({
+        id: orderDetails?.id.toString(),
+      }),
+    )
   })
   it('should return cached order details on subsequent calls', async () => {
     const recipient = await recipientFactory.makePrismaRecipient()
@@ -88,7 +90,7 @@ describe('Prisma Orders Repository (E2E)', () => {
     let cached = await cacheRepository.get(`order:${orderId}:details`)
 
     expect(cached).toBeNull()
-    
+
     await ordersRepository.findById(orderId)
 
     cached = await cacheRepository.get(`order:${orderId}:details`)
@@ -98,12 +100,14 @@ describe('Prisma Orders Repository (E2E)', () => {
     if (!cached) {
       throw new Error('Cache not found')
     }
-    
+
     const orderDetails = await ordersRepository.findById(orderId)
 
-    expect(JSON.parse(cached)).toEqual(expect.objectContaining({
-      id: orderDetails?.id.toString(),
-    }))
+    expect(JSON.parse(cached)).toEqual(
+      expect.objectContaining({
+        id: orderDetails?.id.toString(),
+      }),
+    )
   })
   it('should reset order details cache when saving the order', async () => {
     const recipient = await recipientFactory.makePrismaRecipient()
@@ -121,7 +125,10 @@ describe('Prisma Orders Repository (E2E)', () => {
 
     const orderId = order.id.toString()
 
-    await cacheRepository.set(`order:${orderId}:details`, JSON.stringify({ empty: true}))
+    await cacheRepository.set(
+      `order:${orderId}:details`,
+      JSON.stringify({ empty: true }),
+    )
 
     await ordersRepository.save(order)
 
