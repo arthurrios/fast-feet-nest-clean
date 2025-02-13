@@ -9,6 +9,6 @@ async function bootstrap() {
   const configService = app.get(EnvService)
   const port = configService.get('PORT')
 
-  await app.listen(port)
+  await app.listen(port, '0.0.0.0')
 }
 bootstrap()

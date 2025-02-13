@@ -12,11 +12,13 @@ export class PrismaService
     })
   }
 
-  onModuleInit() {
-    return this.$connect()
+  async onModuleInit() {
+    await this.$connect()
+    console.log('✅ Connected to Neon PostgreSQL');
   }
 
-  onModuleDestroy() {
-    return this.$disconnect()
+  async onModuleDestroy() {
+    await this.$disconnect()
+    console.log('🛑 Disconnected from Neon PostgreSQL');
   }
 }
