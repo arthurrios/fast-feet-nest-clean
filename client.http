@@ -7,11 +7,11 @@ POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "name": "Arthur Rios",
-  "email": "arthur3@acme.com",
-  "cpf": "05011030156",
+  "name": "Eduardo",
+  "email": "dudu2@acme.com",
+  "cpf": "02890389113",
   "password": "123456",
-  "role": "COURIER"
+  "roles": ["COURIER"]
 }
 
 ###
