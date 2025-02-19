@@ -2,7 +2,7 @@
 
 An API for controlling orders from a fictitious carrier, FastFeet.
 
-## [API Docs](https://fast-feet-nest-clean.onrender.com) 
+## [API Docs](https://fast-feet-nest-clean.onrender.com/reference) 
 
 ## Domain
 
