@@ -1,8 +1,6 @@
-import { ApiResponseOptions } from '@nestjs/swagger';
+import { ApiResponseOptions } from '@nestjs/swagger'
 
-export const conflictResponse = (
-  message?: string
-): ApiResponseOptions => ({
+export const conflictResponse = (message?: string): ApiResponseOptions => ({
   status: 409,
   description: 'Conflict error.',
   schema: {
@@ -12,4 +10,4 @@ export const conflictResponse = (
       message: { type: 'string', example: message ?? 'User already exists' },
     },
   },
-});
+})

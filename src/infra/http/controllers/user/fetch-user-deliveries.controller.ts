@@ -6,26 +6,26 @@ import {
   Param,
   Query,
   UnauthorizedException,
-} from '@nestjs/common';
+} from '@nestjs/common'
 import {
   PageQuerySchema,
   pageQueryValidationPipe,
-} from '../order/get-orders.controller';
-import { FetchUserDeliveriesUseCase } from '@/domain/user/application/use-cases/fetch-user-deliveries';
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
-import { UserDeliveryPresenter } from '../../presenters/user-delivery-presenter';
+} from '../order/get-orders.controller'
+import { FetchUserDeliveriesUseCase } from '@/domain/user/application/use-cases/fetch-user-deliveries'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { UserDeliveryPresenter } from '../../presenters/user-delivery-presenter'
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
   ApiQuery,
-} from '@nestjs/swagger';
-import { badRequestResponse } from '@/swagger/responses/bad-request.response';
-import { notFoundResponse } from '@/swagger/responses/not-found.response';
-import { successResponse } from '@/swagger/responses/sucess.response';
-import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error';
-import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response';
+} from '@nestjs/swagger'
+import { badRequestResponse } from '@/swagger/responses/bad-request.response'
+import { notFoundResponse } from '@/swagger/responses/not-found.response'
+import { successResponse } from '@/swagger/responses/sucess.response'
+import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
+import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response'
 
 @ApiTags('Users')
 @Controller('/users/:id/deliveries')
@@ -67,9 +67,15 @@ export class FetchUserDeliveriesController {
       ],
     }),
   )
-  @ApiResponse(unauthorizedResponse('Unauthorized: Only admins can perform this action.'))
-  @ApiResponse(notFoundResponse('User with ID "123e4567-e89b-12d3-a456-426614174000" not found.'))
-  @ApiResponse(badRequestResponse)
+  @ApiResponse(
+    unauthorizedResponse('Unauthorized: Only admins can perform this action.'),
+  )
+  @ApiResponse(
+    notFoundResponse(
+      'User with ID "123e4567-e89b-12d3-a456-426614174000" not found.',
+    ),
+  )
+  @ApiResponse(badRequestResponse())
   async handle(
     @Param('id') userId: string,
     @Query('page', pageQueryValidationPipe) page: PageQuerySchema,
@@ -77,21 +83,21 @@ export class FetchUserDeliveriesController {
     const result = await this.fetchUserDeliveries.execute({
       userId,
       page,
-    });
+    })
 
     if (result.isLeft()) {
-      const error = result.value;
+      const error = result.value
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new NotFoundException(error.message);
+          throw new NotFoundException(error.message)
         case UnauthorizedAdminOnlyError:
-          throw new UnauthorizedException(error.message);
+          throw new UnauthorizedException(error.message)
         default:
-          throw new BadRequestException(error.message);
+          throw new BadRequestException(error.message)
       }
     }
 
-    const deliveries = result.value.deliveries;
-    return { deliveries: deliveries.map(UserDeliveryPresenter.toHTTP) };
+    const deliveries = result.value.deliveries
+    return { deliveries: deliveries.map(UserDeliveryPresenter.toHTTP) }
   }
 }

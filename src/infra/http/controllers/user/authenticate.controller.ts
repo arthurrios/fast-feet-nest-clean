@@ -45,7 +45,7 @@ export class AuthenticateController {
     }),
   )
   @ApiResponse(unauthorizedResponse())
-  @ApiResponse(badRequestResponse)
+  @ApiResponse(badRequestResponse())
   async handle(@Body(bodyValidationPipe) body: AuthenticateBodySchema) {
     const { cpf, password } = body
 

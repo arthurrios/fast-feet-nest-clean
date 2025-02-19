@@ -1,8 +1,6 @@
-import { ApiResponseOptions } from '@nestjs/swagger';
+import { ApiResponseOptions } from '@nestjs/swagger'
 
-export const notFoundResponse = (
-  message?: string
-): ApiResponseOptions => ({
+export const notFoundResponse = (message?: string): ApiResponseOptions => ({
   status: 404,
   description: 'Not found error.',
   schema: {
@@ -12,4 +10,4 @@ export const notFoundResponse = (
       message: { type: 'string', example: message ?? 'Resource not found' },
     },
   },
-});
+})
