@@ -14,8 +14,8 @@ import { EditOrderController } from './edit-order.controller'
 import { EditOrderUseCase } from '@/domain/delivery/application/use-cases/edit-order'
 import { DeleteOrderController } from './delete-order.controller'
 import { DeleteOrderUseCase } from '@/domain/delivery/application/use-cases/delete-order'
-import { UpdateOrderStatusController } from './update-order-status.controller'
 import { UpdateOrderStatusUseCase } from '@/domain/delivery/application/use-cases/update-order-status'
+import { UpdateOrderStatusController } from './update-order-status.controller'
 
 @Module({
   imports: [UserModule, DatabaseModule],

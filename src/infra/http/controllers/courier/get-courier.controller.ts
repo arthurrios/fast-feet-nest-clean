@@ -5,34 +5,34 @@ import {
   NotFoundException,
   Param,
   UnauthorizedException,
-} from '@nestjs/common';
-import { CourierPresenter } from '../../presenters/courier-presenter';
-import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error';
-import { GetCourierUseCase } from '@/domain/delivery/application/use-cases/get-courier';
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
-import { CurrentUser } from '@/infra/auth/current-user-decorator';
-import { UserPayload } from '@/infra/auth/jwt.strategy';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-} from '@nestjs/swagger';
-import { z } from 'zod';
-import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema';
-import { badRequestResponse } from '@/swagger/responses/bad-request.response';
-import { notFoundResponse } from '@/swagger/responses/not-found.response';
-import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response';
+} from '@nestjs/common'
+import { CourierPresenter } from '../../presenters/courier-presenter'
+import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
+import { GetCourierUseCase } from '@/domain/delivery/application/use-cases/get-courier'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { z } from 'zod'
+import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema'
+import { badRequestResponse } from '@/swagger/responses/bad-request.response'
+import { notFoundResponse } from '@/swagger/responses/not-found.response'
+import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response'
 
-// Define a Zod schema for the courier response
 const courierResponseSchema = z.object({
   id: z.string().describe('The unique identifier of the courier'),
   name: z.string().describe("The courier's full name"),
-  cpf: z.string().describe("The courier's CPF in formatted form (e.g., 123.456.789-01)"),
+  cpf: z
+    .string()
+    .describe("The courier's CPF in formatted form (e.g., 123.456.789-01)"),
   email: z.string().email().describe("The courier's email address"),
-  createdAt: z.string().describe('The creation timestamp of the courier record'),
-  updatedAt: z.string().describe('The last update timestamp of the courier record'),
-});
+  createdAt: z
+    .string()
+    .describe('The creation timestamp of the courier record'),
+  updatedAt: z
+    .string()
+    .describe('The last update timestamp of the courier record'),
+})
 
 @ApiTags('Couriers')
 @Controller('/couriers/:id')
@@ -67,11 +67,13 @@ export class GetCourierController {
           createdAt: '2023-10-01T12:00:00Z',
           updatedAt: '2023-10-01T12:00:00Z',
         },
-      }
+      },
     ),
   })
   @ApiResponse(
-    notFoundResponse('Courier with ID "123e4567-e89b-12d3-a456-426614174000" not found.'),
+    notFoundResponse(
+      'Courier with ID "123e4567-e89b-12d3-a456-426614174000" not found.',
+    ),
   )
   @ApiResponse(
     unauthorizedResponse('Unauthorized: Only admins can perform this action.'),
@@ -81,21 +83,21 @@ export class GetCourierController {
     const result = await this.getCourier.execute({
       requesterId: user.sub,
       courierId: id,
-    });
+    })
 
     if (result.isLeft()) {
-      const error = result.value;
+      const error = result.value
       switch (error.constructor) {
         case UnauthorizedAdminOnlyError:
-          throw new UnauthorizedException(error.message);
+          throw new UnauthorizedException(error.message)
         case ResourceNotFoundError:
-          throw new NotFoundException(error.message);
+          throw new NotFoundException(error.message)
         default:
-          throw new BadRequestException(error.message);
+          throw new BadRequestException(error.message)
       }
     }
 
-    const { courier } = result.value;
-    return { courier: CourierPresenter.toHTTP(courier) };
+    const { courier } = result.value
+    return { courier: CourierPresenter.toHTTP(courier) }
   }
 }

@@ -7,28 +7,27 @@ import {
   Param,
   Put,
   UnauthorizedException,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { EditCourierUseCase } from '@/domain/delivery/application/use-cases/edit-courier';
-import { CurrentUser } from '@/infra/auth/current-user-decorator';
-import { UserPayload } from '@/infra/auth/jwt.strategy';
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf';
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
+} from '@nestjs/common'
+import { z } from 'zod'
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
+import { EditCourierUseCase } from '@/domain/delivery/application/use-cases/edit-courier'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
   ApiBody,
-} from '@nestjs/swagger';
-import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema';
-import { badRequestResponse } from '@/swagger/responses/bad-request.response';
-import { notFoundResponse } from '@/swagger/responses/not-found.response';
-import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error';
-import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response';
+} from '@nestjs/swagger'
+import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema'
+import { badRequestResponse } from '@/swagger/responses/bad-request.response'
+import { notFoundResponse } from '@/swagger/responses/not-found.response'
+import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
+import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response'
 
-// Define the Zod schema for the request body
 const editCourierBodySchema = z.object({
   name: z.string().describe("The courier's full name"),
   email: z.string().email().describe("The courier's email address"),
@@ -37,10 +36,10 @@ const editCourierBodySchema = z.object({
     .refine(
       (cpf) => {
         try {
-          CPF.create(cpf);
-          return true;
+          CPF.create(cpf)
+          return true
         } catch {
-          return false;
+          return false
         }
       },
       {
@@ -48,10 +47,10 @@ const editCourierBodySchema = z.object({
       },
     )
     .describe("The courier's CPF (11 digits)"),
-});
+})
 
-const bodyValidationPipe = new ZodValidationPipe(editCourierBodySchema);
-type EditCourierBodySchema = z.infer<typeof editCourierBodySchema>;
+const bodyValidationPipe = new ZodValidationPipe(editCourierBodySchema)
+type EditCourierBodySchema = z.infer<typeof editCourierBodySchema>
 
 @ApiTags('Couriers')
 @Controller('/couriers/:id')
@@ -83,16 +82,24 @@ export class EditCourierController {
     description: 'Courier updated successfully.',
   })
   @ApiResponse(
-    notFoundResponse('Courier with ID "123e4567-e89b-12d3-a456-426614174000" not found.'),
+    notFoundResponse(
+      'Courier with ID "123e4567-e89b-12d3-a456-426614174000" not found.',
+    ),
   )
-  @ApiResponse(unauthorizedResponse('Only authorized admin users can perform this action.'))
-  @ApiResponse(badRequestResponse('Invalid input data. Please check the request body.'))
+  @ApiResponse(
+    unauthorizedResponse(
+      'Only authorized admin users can perform this action.',
+    ),
+  )
+  @ApiResponse(
+    badRequestResponse('Invalid input data. Please check the request body.'),
+  )
   async handle(
     @Param('id') courierId: string,
     @CurrentUser() user: UserPayload,
     @Body(bodyValidationPipe) body: EditCourierBodySchema,
   ) {
-    const { name, email, cpf } = body;
+    const { name, email, cpf } = body
 
     const result = await this.editCourier.execute({
       requesterId: user.sub,
@@ -100,17 +107,17 @@ export class EditCourierController {
       name,
       email,
       cpf,
-    });
+    })
 
     if (result.isLeft()) {
-      const error = result.value;
+      const error = result.value
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new NotFoundException(error.message);
+          throw new NotFoundException(error.message)
         case UnauthorizedAdminOnlyError:
-          throw new UnauthorizedException(error.message);
+          throw new UnauthorizedException(error.message)
         default:
-          throw new BadRequestException(error.message);
+          throw new BadRequestException(error.message)
       }
     }
   }

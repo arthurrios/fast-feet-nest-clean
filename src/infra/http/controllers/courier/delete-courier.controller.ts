@@ -6,21 +6,16 @@ import {
   NotFoundException,
   Param,
   UnauthorizedException,
-} from '@nestjs/common';
-import { CurrentUser } from '@/infra/auth/current-user-decorator';
-import { UserPayload } from '@/infra/auth/jwt.strategy';
-import { DeleteCourierUseCase } from '@/domain/delivery/application/use-cases/delete-courier';
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
-import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-} from '@nestjs/swagger';
-import { badRequestResponse } from '@/swagger/responses/bad-request.response';
-import { notFoundResponse } from '@/swagger/responses/not-found.response';
-import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response';
+} from '@nestjs/common'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { DeleteCourierUseCase } from '@/domain/delivery/application/use-cases/delete-courier'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger'
+import { badRequestResponse } from '@/swagger/responses/bad-request.response'
+import { notFoundResponse } from '@/swagger/responses/not-found.response'
+import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response'
 
 @ApiTags('Couriers')
 @Controller('/couriers/:id')
@@ -45,27 +40,32 @@ export class DeleteCourierController {
     description: 'Courier deleted successfully.',
   })
   @ApiResponse(
-    notFoundResponse('Courier with ID "123e4567-e89b-12d3-a456-426614174000" not found.'),
+    notFoundResponse(
+      'Courier with ID "123e4567-e89b-12d3-a456-426614174000" not found.',
+    ),
   )
   @ApiResponse(
     unauthorizedResponse('Unauthorized: Only admins can perform this action.'),
   )
   @ApiResponse(badRequestResponse())
-  async handle(@Param('id') courierId: string, @CurrentUser() user: UserPayload) {
+  async handle(
+    @Param('id') courierId: string,
+    @CurrentUser() user: UserPayload,
+  ) {
     const result = await this.deleteCourier.execute({
       requesterId: user.sub,
       courierId,
-    });
+    })
 
     if (result.isLeft()) {
-      const error = result.value;
+      const error = result.value
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new NotFoundException(error.message);
+          throw new NotFoundException(error.message)
         case UnauthorizedAdminOnlyError:
-          throw new UnauthorizedException(error.message);
+          throw new UnauthorizedException(error.message)
         default:
-          throw new BadRequestException(error.message);
+          throw new BadRequestException(error.message)
       }
     }
   }

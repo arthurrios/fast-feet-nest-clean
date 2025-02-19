@@ -7,28 +7,27 @@ import {
   Param,
   Put,
   UnauthorizedException,
-} from '@nestjs/common';
-import { z } from 'zod';
-import { ZodValidationPipe } from '../../pipes/zod-validation-pipe';
-import { EditRecipientUseCase } from '@/domain/delivery/application/use-cases/edit-recipient';
-import { CurrentUser } from '@/infra/auth/current-user-decorator';
-import { UserPayload } from '@/infra/auth/jwt.strategy';
-import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf';
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error';
+} from '@nestjs/common'
+import { z } from 'zod'
+import { ZodValidationPipe } from '../../pipes/zod-validation-pipe'
+import { EditRecipientUseCase } from '@/domain/delivery/application/use-cases/edit-recipient'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CPF } from '@/domain/user/enterprise/entities/value-objects/cpf'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import {
   ApiTags,
   ApiOperation,
   ApiResponse,
   ApiParam,
   ApiBody,
-} from '@nestjs/swagger';
-import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema';
-import { badRequestResponse } from '@/swagger/responses/bad-request.response';
-import { notFoundResponse } from '@/swagger/responses/not-found.response';
-import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error';
-import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response';
+} from '@nestjs/swagger'
+import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema'
+import { badRequestResponse } from '@/swagger/responses/bad-request.response'
+import { notFoundResponse } from '@/swagger/responses/not-found.response'
+import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
+import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response'
 
-// Define the Zod schema for the request body
 const editRecipientBodySchema = z.object({
   name: z.string().describe("The recipient's full name"),
   email: z.string().email().describe("The recipient's email address"),
@@ -37,10 +36,10 @@ const editRecipientBodySchema = z.object({
     .refine(
       (cpf) => {
         try {
-          CPF.create(cpf);
-          return true;
+          CPF.create(cpf)
+          return true
         } catch {
-          return false;
+          return false
         }
       },
       {
@@ -48,10 +47,10 @@ const editRecipientBodySchema = z.object({
       },
     )
     .describe("The recipient's CPF (11 digits)"),
-});
+})
 
-const bodyValidationPipe = new ZodValidationPipe(editRecipientBodySchema);
-type EditRecipientBodySchema = z.infer<typeof editRecipientBodySchema>;
+const bodyValidationPipe = new ZodValidationPipe(editRecipientBodySchema)
+type EditRecipientBodySchema = z.infer<typeof editRecipientBodySchema>
 
 @ApiTags('Recipients')
 @Controller('/recipients/:id')
@@ -83,16 +82,24 @@ export class EditRecipientController {
     description: 'Recipient updated successfully.',
   })
   @ApiResponse(
-    notFoundResponse('Recipient with ID "123e4567-e89b-12d3-a456-426614174000" not found.'),
+    notFoundResponse(
+      'Recipient with ID "123e4567-e89b-12d3-a456-426614174000" not found.',
+    ),
   )
-  @ApiResponse(unauthorizedResponse('Only authorized admin users can perform this action.'))
-  @ApiResponse(badRequestResponse('Invalid input data. Please check the request body.'))
+  @ApiResponse(
+    unauthorizedResponse(
+      'Only authorized admin users can perform this action.',
+    ),
+  )
+  @ApiResponse(
+    badRequestResponse('Invalid input data. Please check the request body.'),
+  )
   async handle(
     @Param('id') recipientId: string,
     @CurrentUser() user: UserPayload,
     @Body(bodyValidationPipe) body: EditRecipientBodySchema,
   ) {
-    const { name, email, cpf } = body;
+    const { name, email, cpf } = body
 
     const result = await this.editRecipient.execute({
       requesterId: user.sub,
@@ -100,17 +107,17 @@ export class EditRecipientController {
       name,
       email,
       cpf,
-    });
+    })
 
     if (result.isLeft()) {
-      const error = result.value;
+      const error = result.value
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new NotFoundException(error.message);
+          throw new NotFoundException(error.message)
         case UnauthorizedAdminOnlyError:
-          throw new UnauthorizedException(error.message);
+          throw new UnauthorizedException(error.message)
         default:
-          throw new BadRequestException(error.message);
+          throw new BadRequestException(error.message)
       }
     }
   }
