@@ -56,13 +56,7 @@ export class CreateUserController {
     }),
   })
   @ApiResponse(
-    successResponse('User created successfully.', {
-      id: '123e4567-e89b-12d3-a456-426614174000',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      cpf: '12345678901',
-      roles: [Role.COURIER],
-    }),
+    successResponse('User created successfully.'),
   )
   @ApiResponse(conflictResponse(`User with CPF "00.000.000-00" already exists`))
   @ApiResponse(badRequestResponse)
