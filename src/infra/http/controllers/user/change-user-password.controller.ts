@@ -23,6 +23,8 @@ import {
 import { zodToOpenApiSchema } from '@/swagger/zod-to-open-api-schema'
 import { badRequestResponse } from '@/swagger/responses/bad-request.response'
 import { notFoundResponse } from '@/swagger/responses/not-found.response'
+import { UnauthorizedAdminOnlyError } from '@/core/errors/errors/unauthorized-admin-only-error'
+import { unauthorizedResponse } from '@/swagger/responses/unauthorized.response'
 
 const changeUserPasswordBodySchema = z.object({
   newPassword: z
@@ -58,6 +60,9 @@ export class ChangeUserPasswordController {
     }),
   })
   @ApiResponse(notFoundResponse('User not found.'))
+  @ApiResponse(
+    unauthorizedResponse('Unauthorized: Only admins can perform this action.'),
+  )
   @ApiResponse(badRequestResponse())
   async handle(
     @Param('id') userId: string,
@@ -77,6 +82,8 @@ export class ChangeUserPasswordController {
       switch (error.constructor) {
         case ResourceNotFoundError:
           throw new NotFoundException(error.message)
+        case UnauthorizedAdminOnlyError:
+          throw new BadRequestException(error.message)
         default:
           throw new BadRequestException(error.message)
       }
