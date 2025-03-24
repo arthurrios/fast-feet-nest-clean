@@ -1,6 +1,10 @@
-# FastFeet Domain
+# FastFeet API
 
-An API for controlling orders from a fictitious carrier, FastFeet.
+A robust delivery management API using NestJS with Clean
+Architecture principles. Implemented role-based access control, real-time order
+tracking, and comprehensive notification system. Built with TypeScript, PostgreSQL,
+Redis caching, and AWS S3 integration. Features include domain-driven design,
+repository pattern, and comprehensive test coverage with Vitest.
 
 ## [API Docs](https://fast-feet-nest-clean.onrender.com/reference) 
 
